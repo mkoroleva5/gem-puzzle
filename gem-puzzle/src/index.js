@@ -26,6 +26,10 @@ saveButton.innerHTML = 'Save';
 let resultsButton = document.createElement('button');
 resultsButton.className = 'button results-button';
 resultsButton.innerHTML = 'Results';
+/*
+let muteButton = document.createElement('button');
+muteButton.className = 'button mute-button';
+muteButton.style.background = 'url(/assets/unmuted.png)'*/
 
 buttonsWrapper.append(startButton, stopButton, saveButton, resultsButton);
 
@@ -120,6 +124,18 @@ function changeInputView() {
     }
 }
 
+if(inputsArray[1].checked && 
+    !localStorage.getItem('input1-checked') && 
+    !localStorage.getItem('input2-checked') && 
+    !localStorage.getItem('input3-checked') &&
+    !localStorage.getItem('input4-checked') &&
+    !localStorage.getItem('input5-checked') &&
+    !localStorage.getItem('input6-checked')) {
+        labelsArray[1].style.border = '3px solid #829bd6';
+        labelsArray[1].style.borderRadius = '10px';
+        labelsArray[1].style.color = '#8ce068';
+}
+
 window.addEventListener('load', () => {
     for (let i = 1; i <= 6; i++) {
         if(localStorage.getItem(`input${i}-checked`) === 'true') {
@@ -151,10 +167,13 @@ let cellSize;
 let counter = 0;
 let cells;
 
-const audio = document.createElement('audio');
-field.appendChild(audio);
-audio.setAttribute('src', '/assets/75305337ef8f53f.mp3');
+import audioClickSource from '/assets/5d828d6652e4d39.mp3';
+const audioClick = new Audio(audioClickSource);
 
+import audioWinSource from '/assets/goodresult-82807.mp3';
+const audioWin = new Audio(audioWinSource);
+
+let victory;
 const move = (index) => {
     const cell = cells[index];
     const leftDiff = Math.abs(empty.left - cell.left);
@@ -164,8 +183,7 @@ const move = (index) => {
         return;
     }
 
-    audio.currentTime = 0;
-    audio.play();
+    audioClick.play();
 
     cell.element.style.top = `${empty.top * cellSize}px`;
     cell.element.style.left = `${empty.left * cellSize}px`;
@@ -178,7 +196,7 @@ const move = (index) => {
     cell.top = emptyTop;
     counter++;
 
-    const victory = cells.every(cell => {
+    victory = cells.every(cell => {
         if (inputsArray[0].checked) return cell.value === cell.top * 3 + cell.left + 1; 
         if (inputsArray[1].checked) return cell.value === cell.top * 4 + cell.left + 1; 
         if (inputsArray[2].checked) return cell.value === cell.top * 5 + cell.left + 1; 
@@ -188,9 +206,21 @@ const move = (index) => {
     })
     
     if (victory) {
+        audioWin.play();
         setTimeout(() => {
-            alert(`Hooray! You solved the puzzle in ##:## and ${counter} moves`);
-        }, 330)
+            alert(`Hooray! You solved the puzzle in ${time.innerHTML[6]}${time.innerHTML[7]}:${time.innerHTML[9]}${time.innerHTML[10]} and ${counter} moves`); 
+        }, 330);
+        stopButton.style.border = '3px solid #ace494';
+        stopButton.style.color = '#9bdf7e';
+        clearInterval(interval);
+    }
+
+    if (stopButton.innerHTML === 'Play') {
+        stopButton.style.border = '3px solid #f9906a';
+        stopButton.style.color = '#f9906a';
+        clearInterval(interval);
+        startTimer();
+        stopButton.innerHTML = 'Stop';
     }
 }
 
@@ -242,13 +272,14 @@ const createPuzzle = () => {
                 top: top,
                 element: cell
             });
+            
             cell.style.top = `${top * cellSize}px`;
             cell.style.left = `${left * cellSize}px`;
             field.append(cell);
-            cell.onclick = () => {
+            cell.addEventListener('click', () => {
                 move(i);
                 moves.innerHTML = `Moves: ${counter}`;
-            }
+            });
         }
     }
     if (inputsArray[1].checked) {
@@ -268,10 +299,10 @@ const createPuzzle = () => {
             cell.style.top = `${top * cellSize}px`;
             cell.style.left = `${left * cellSize}px`;
             field.append(cell);
-            cell.onclick = () => {
+            cell.addEventListener('click', () => {
                 move(i);
                 moves.innerHTML = `Moves: ${counter}`;
-            }
+            });
         }
     }
     if (inputsArray[2].checked) {
@@ -293,10 +324,10 @@ const createPuzzle = () => {
             cell.style.top = `${top * cellSize}px`;
             cell.style.left = `${left * cellSize}px`;
             field.append(cell);
-            cell.onclick = () => {
+            cell.addEventListener('click', () => {
                 move(i);
                 moves.innerHTML = `Moves: ${counter}`;
-            }
+            });
         }
     }
     if (inputsArray[3].checked) {
@@ -319,10 +350,10 @@ const createPuzzle = () => {
             cell.style.top = `${top * cellSize}px`;
             cell.style.left = `${left * cellSize}px`;
             field.append(cell);
-            cell.onclick = () => {
+            cell.addEventListener('click', () => {
                 move(i);
                 moves.innerHTML = `Moves: ${counter}`;
-            }
+            });
         }
     }
     if (inputsArray[4].checked) {
@@ -331,6 +362,7 @@ const createPuzzle = () => {
             cell.style.width = `${320/7}px`;
             cell.style.height = `${320/7}px`;
             cell.style.fontSize = '22px';
+            cell.style.border = '4px solid #829bd6';
             cell.className = 'cell';
             const value = numbers[i - 1] + 1;
             cell.innerHTML = value;
@@ -345,10 +377,10 @@ const createPuzzle = () => {
             cell.style.top = `${top * cellSize}px`;
             cell.style.left = `${left * cellSize}px`;
             field.append(cell);
-            cell.onclick = () => {
+            cell.addEventListener('click', () => {
                 move(i);
                 moves.innerHTML = `Moves: ${counter}`;
-            }
+            });
         }
     }
     if (inputsArray[5].checked) {
@@ -357,6 +389,7 @@ const createPuzzle = () => {
             cell.style.width = `${320/8}px`;
             cell.style.height = `${320/8}px`;
             cell.style.fontSize = '20px';
+            cell.style.border = '4px solid #829bd6';
             cell.className = 'cell';
             const value = numbers[i - 1] + 1;
             cell.innerHTML = value;
@@ -371,13 +404,12 @@ const createPuzzle = () => {
             cell.style.top = `${top * cellSize}px`;
             cell.style.left = `${left * cellSize}px`;
             field.append(cell);
-            cell.onclick = () => {
+            cell.addEventListener('click', () => {
                 move(i);
                 moves.innerHTML = `Moves: ${counter}`;
-            }
+            });
         }
     }
-
 }
 
 window.addEventListener('load', () => {
@@ -387,16 +419,83 @@ window.addEventListener('load', () => {
     if (inputsArray[3].checked) empty.value = 36;
     if (inputsArray[4].checked) empty.value = 49;
     if (inputsArray[5].checked) empty.value = 64;
-    createPuzzle();
 });
-startButton.onclick = () => {
+
+startButton.addEventListener('click', () => {
     counter = 0;
+    sec = 0;
+    min = 0;
     moves.innerHTML = `Moves: ${counter}`
     field.innerHTML = '';
+    stopButton.style.border = '3px solid #f9906a';
+    stopButton.style.color = '#f9906a';
+    stopButton.innerHTML = 'Stop';
+    saveButton.style.border = '3px solid #f5cd2e';
+    saveButton.style.color = '#f5cd2e';
     createPuzzle();
-    
-    //time.innerHTML = `Time: ${minutes}:${seconds}`
+});
+
+let sec = 0;
+let min = 0;
+let interval;
+
+function startTimer() {
+    interval = setInterval(tick, 1000);
 }
+
+function tick() {
+    sec++;
+    if (sec >= 60) {
+        min++;
+        sec = sec - 60;
+    }
+    if (sec < 10) {
+        if (min < 10) {
+            time.innerHTML = 'Time: ' + '0' + min + ':0' + sec;
+        } else {
+            time.innerHTML = 'Time: ' + min + ':0' + sec;
+        }
+    } else {
+        if (min < 10) {
+            time.innerHTML = 'Time: ' + '0' + min + ':' + sec;
+        } else {
+            time.innerHTML = 'Time: ' + min + ':' + sec;
+        }
+    }
+}
+
+startButton.addEventListener('click', () => {
+    time.innerHTML = 'Time: 00:00';
+    clearInterval(interval);
+    startTimer();
+});
+
+console.log(cells)
+
+stopButton.addEventListener('click', () => {
+    if (field.childNodes.length && !victory) {
+        if (stopButton.innerHTML === 'Stop') {
+            stopButton.style.border = '3px solid #ace494';
+            stopButton.style.color = '#9bdf7e';
+            clearInterval(interval);
+            stopButton.innerHTML = 'Play';
+        } else if (stopButton.innerHTML === 'Play') {
+            stopButton.style.border = '3px solid #f9906a';
+            stopButton.style.color = '#f9906a';
+            clearInterval(interval);
+            startTimer();
+            stopButton.innerHTML = 'Stop';
+        }  
+    }
+});
+
+
+    
+
+
+
+
+
 
 
 

@@ -65,11 +65,6 @@ body {
   color: #f9906a;
 }
 
-.save-button:hover {
-  border: 3px solid #f5cd2e;
-  color: #f5cd2e;
-}
-
 .results-button:hover {
   border: 3px solid #b691d8;
   color: #b691d8;
@@ -94,7 +89,7 @@ body {
   position: relative;
   width: 320px;
   height: 320px;
-  margin: 30px;
+  margin: 20px 30px 30px 30px;
   border: 10px solid #ace494;
   border-radius: 10px;
   background-color: rgb(223, 241, 206);
@@ -136,4 +131,47 @@ input {
   transform: scale(4);
   opacity: 0;
   cursor: pointer;
+}
+
+@media (max-width: 420px) {
+  .buttons-wrapper {
+    margin: 0 20px;
+    flex-wrap: wrap;
+  }
+
+  form {
+    position: relative;
+    right: 25px;
+    padding: 0 20px;
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; 
+    grid-template-rows: 1fr 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      ". . . . . ."
+      ". . . . . ."; 
+  }
+
+  input {
+    transform: scale(1);
+    width: 40px;
+    height: 40px;
+    position: relative;
+    left: 55px;
+  }
+
+  .moves,
+  .time {
+    margin-top: 20px;
+  }
+
+  .field {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 340px) {
+  .field {
+    border: 1px solid #ace494;
+  }
 }
