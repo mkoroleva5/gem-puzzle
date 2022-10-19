@@ -10,7 +10,6 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background-image: url('../assets/6728670.png');
   background-repeat: no-repeat;
@@ -28,7 +27,8 @@ body {
 }
 
 .buttons-wrapper,
-.stats-wrapper {
+.stats-wrapper,
+.field-size-wrapper {
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -94,7 +94,7 @@ body {
   position: relative;
   width: 320px;
   height: 320px;
-  margin: 10px 30px auto;
+  margin: 30px;
   border: 10px solid #ace494;
   border-radius: 10px;
   background-color: rgb(223, 241, 206);
@@ -117,4 +117,23 @@ body {
   color: #829bd6;
   cursor: pointer;
   transition: 0.3s;
+}
+
+label {
+  margin: 5px;
+  padding: 5px;
+  color: #829bd6;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+input {
+  position: relative;
+  left: 33px;
+  transform: scale(4);
+  opacity: 0;
+  cursor: pointer;
 }
