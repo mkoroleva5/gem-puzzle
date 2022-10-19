@@ -26,12 +26,18 @@ saveButton.innerHTML = 'Save';
 let resultsButton = document.createElement('button');
 resultsButton.className = 'button results-button';
 resultsButton.innerHTML = 'Results';
-/*
+
+import unmutedImg from '/assets/unmuted.png';
+import mutedImg from '/assets/muted.png';
 let muteButton = document.createElement('button');
 muteButton.className = 'button mute-button';
-muteButton.style.background = 'url(/assets/unmuted.png)'*/
+let muteButtonImg = document.createElement('img');
+muteButtonImg.setAttribute('src', unmutedImg);
+muteButtonImg.style.width = '17px';
+muteButtonImg.style.height = '17px';
 
-buttonsWrapper.append(startButton, stopButton, saveButton, resultsButton);
+buttonsWrapper.append(startButton, stopButton, saveButton, resultsButton, muteButton);
+muteButton.append(muteButtonImg);
 
 let moves = document.createElement('div');
 moves.className = 'moves';
@@ -167,7 +173,7 @@ let cellSize;
 let counter = 0;
 let cells;
 
-import audioClickSource from '/assets/5d828d6652e4d39.mp3';
+import audioClickSource from '/assets/75305337ef8f53f.mp3';
 const audioClick = new Audio(audioClickSource);
 
 import audioWinSource from '/assets/goodresult-82807.mp3';
@@ -225,189 +231,51 @@ const move = (index) => {
 }
 
 const createPuzzle = () => {
-    if (inputsArray[0].checked) cellSize = 320/3;
-    if (inputsArray[1].checked) cellSize = 320/4;
-    if (inputsArray[2].checked) cellSize = 320/5;
-    if (inputsArray[3].checked) cellSize = 320/6;
-    if (inputsArray[4].checked) cellSize = 320/7;
-    if (inputsArray[5].checked) cellSize = 320/8;
     let numbers;
-
-    if (inputsArray[0].checked) {
-        numbers = [...Array(8).keys()].sort(() => Math.random() - 0.5);
-    }
-    if (inputsArray[1].checked) {
-        numbers = [...Array(15).keys()].sort(() => Math.random() - 0.5);
-    }
-    if (inputsArray[2].checked) {
-        numbers = [...Array(24).keys()].sort(() => Math.random() - 0.5);
-    }
-    if (inputsArray[3].checked) {
-        numbers = [...Array(35).keys()].sort(() => Math.random() - 0.5);
-    }
-    if (inputsArray[4].checked) {
-        numbers = [...Array(48).keys()].sort(() => Math.random() - 0.5);
-    }
-    if (inputsArray[5].checked) {
-        numbers = [...Array(63).keys()].sort(() => Math.random() - 0.5);
-    }
-
     cells = [];
     empty.top = 0;
     empty.left = 0;
     cells.push(empty);
-    if (inputsArray[0].checked) {
-        for (let i = 1; i <=8; i++) {
-            const cell = document.createElement('div');
-            cell.style.width = `${320/3}px`;
-            cell.style.height = `${320/3}px`;
-            cell.className = 'cell';
-            const value = numbers[i - 1] + 1;
-            cell.innerHTML = value;
-            const left = i % 3;
-            const top = (i - left) / 3;
-            cells.push({
-                value: value,
-                left: left,
-                top: top,
-                element: cell
-            });
-            
-            cell.style.top = `${top * cellSize}px`;
-            cell.style.left = `${left * cellSize}px`;
-            field.append(cell);
-            cell.addEventListener('click', () => {
-                move(i);
-                moves.innerHTML = `Moves: ${counter}`;
-            });
-        }
-    }
-    if (inputsArray[1].checked) {
-        for (let i = 1; i <=15; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'cell';
-            const value = numbers[i - 1] + 1;
-            cell.innerHTML = value;
-            const left = i % 4;
-            const top = (i - left) / 4;
-            cells.push({
-                value: value,
-                left: left,
-                top: top,
-                element: cell
-            });
-            cell.style.top = `${top * cellSize}px`;
-            cell.style.left = `${left * cellSize}px`;
-            field.append(cell);
-            cell.addEventListener('click', () => {
-                move(i);
-                moves.innerHTML = `Moves: ${counter}`;
-            });
-        }
-    }
-    if (inputsArray[2].checked) {
-        for (let i = 1; i <=24; i++) {
-            const cell = document.createElement('div');
-            cell.style.width = `${320/5}px`;
-            cell.style.height = `${320/5}px`;
-            cell.className = 'cell';
-            const value = numbers[i - 1] + 1;
-            cell.innerHTML = value;
-            const left = i % 5;
-            const top = (i - left) / 5;
-            cells.push({
-                value: value,
-                left: left,
-                top: top,
-                element: cell
-            });
-            cell.style.top = `${top * cellSize}px`;
-            cell.style.left = `${left * cellSize}px`;
-            field.append(cell);
-            cell.addEventListener('click', () => {
-                move(i);
-                moves.innerHTML = `Moves: ${counter}`;
-            });
-        }
-    }
-    if (inputsArray[3].checked) {
-        for (let i = 1; i <=35; i++) {
-            const cell = document.createElement('div');
-            cell.style.width = `${320/6 + 0.01}px`;
-            cell.style.height = `${320/6 + 0.01}px`;
-            cell.style.fontSize = '26px';
-            cell.className = 'cell';
-            const value = numbers[i - 1] + 1;
-            cell.innerHTML = value;
-            const left = i % 6;
-            const top = (i - left) / 6;
-            cells.push({
-                value: value,
-                left: left,
-                top: top,
-                element: cell
-            });
-            cell.style.top = `${top * cellSize}px`;
-            cell.style.left = `${left * cellSize}px`;
-            field.append(cell);
-            cell.addEventListener('click', () => {
-                move(i);
-                moves.innerHTML = `Moves: ${counter}`;
-            });
-        }
-    }
-    if (inputsArray[4].checked) {
-        for (let i = 1; i <=48; i++) {
-            const cell = document.createElement('div');
-            cell.style.width = `${320/7}px`;
-            cell.style.height = `${320/7}px`;
-            cell.style.fontSize = '22px';
-            cell.style.border = '4px solid #829bd6';
-            cell.className = 'cell';
-            const value = numbers[i - 1] + 1;
-            cell.innerHTML = value;
-            const left = i % 7;
-            const top = (i - left) / 7;
-            cells.push({
-                value: value,
-                left: left,
-                top: top,
-                element: cell
-            });
-            cell.style.top = `${top * cellSize}px`;
-            cell.style.left = `${left * cellSize}px`;
-            field.append(cell);
-            cell.addEventListener('click', () => {
-                move(i);
-                moves.innerHTML = `Moves: ${counter}`;
-            });
-        }
-    }
-    if (inputsArray[5].checked) {
-        for (let i = 1; i <=63; i++) {
-            const cell = document.createElement('div');
-            cell.style.width = `${320/8}px`;
-            cell.style.height = `${320/8}px`;
-            cell.style.fontSize = '20px';
-            cell.style.border = '4px solid #829bd6';
-            cell.className = 'cell';
-            const value = numbers[i - 1] + 1;
-            cell.innerHTML = value;
-            const left = i % 8;
-            const top = (i - left) / 8;
-            cells.push({
-                value: value,
-                left: left,
-                top: top,
-                element: cell
-            });
-            cell.style.top = `${top * cellSize}px`;
-            cell.style.left = `${left * cellSize}px`;
-            field.append(cell);
-            cell.addEventListener('click', () => {
-                move(i);
-                moves.innerHTML = `Moves: ${counter}`;
-            });
+    for (let j = 0; j < 6; j++) {
+        if (inputsArray[j].checked) {
+            cellSize = 320/(j + 3);
+            numbers = [...Array((j + 3)*(j + 3) - 1).keys()].sort(() => Math.random() - 0.5);
+            for (let i = 1; i <= (j + 3)*(j + 3) - 1; i++) {
+                const cell = document.createElement('div');
+                cell.style.width = `${320/(j + 3)}px`;
+                cell.style.height = `${320/(j + 3)}px`;
+                if (j === 3) {
+                    cell.style.width = `${320/(j + 3) + 0.01}px`;
+                    cell.style.height = `${320/(j + 3) + 0.01}px`;
+                    cell.style.fontSize = '26px';
+                }
+                if (j === 4) {
+                    cell.style.fontSize = '22px';
+                    cell.style.border = '4px solid #829bd6';
+                }
+                if (j === 5) {
+                    cell.style.fontSize = '20px';
+                    cell.style.border = '4px solid #829bd6';
+                }
+                cell.className = 'cell';
+                const value = numbers[i - 1] + 1;
+                cell.innerHTML = value;
+                const left = i % (j + 3);
+                const top = (i - left) / (j + 3);
+                cells.push({
+                    value: value,
+                    left: left,
+                    top: top,
+                    element: cell
+                });
+                cell.style.top = `${top * cellSize}px`;
+                cell.style.left = `${left * cellSize}px`;
+                field.append(cell);
+                cell.addEventListener('click', () => {
+                    move(i);
+                    moves.innerHTML = `Moves: ${counter}`;
+                });
+            }
         }
     }
 }
@@ -489,7 +357,22 @@ stopButton.addEventListener('click', () => {
     }
 });
 
+muteButton.addEventListener('click', () => {
+    if (!muteButton.classList.contains('mute')) {
+        muteButtonImg.setAttribute ('src', mutedImg);
+        muteButton.classList.add('mute');
+        audioClick.muted = true;
+        audioWin.muted = true;
 
+    } else {
+        muteButtonImg.setAttribute ('src', unmutedImg);
+        muteButton.classList.remove('mute');
+        audioClick.muted = false;
+        audioWin.muted = false
+
+    }
+    
+})
     
 
 
