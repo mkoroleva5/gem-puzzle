@@ -9,7 +9,24 @@ buttonsWrapper.className = 'buttons-wrapper';
 let statsWrapper = document.createElement('div');
 statsWrapper.className = 'stats-wrapper';
 
-box.append(buttonsWrapper, statsWrapper);
+let resultsWrapper = document.createElement('div');
+resultsWrapper.className = 'results-wrapper';
+let resultsBox = document.createElement('div');
+resultsBox.className = 'results-box';
+let resultsItem = document.createElement('div');
+resultsItem.className = 'results-item';
+let closeResultsButton = document.createElement('img');
+closeResultsButton.className = 'close-results-button';
+import closeImg from '/assets/close.png';
+closeResultsButton.setAttribute('src', closeImg);
+
+box.append(buttonsWrapper, statsWrapper, resultsWrapper);
+resultsWrapper.append(resultsBox);
+resultsBox.append(closeResultsButton);
+
+for (let i = 0; i < 10; i++) {
+    resultsBox.innerHTML += '<div class="results-item"></div>';
+}
 
 let startButton = document.createElement('button');
 startButton.className = 'button start-button';
@@ -181,6 +198,7 @@ import audioWinSource from '/assets/goodresult-82807.mp3';
 const audioWin = new Audio(audioWinSource);
 
 let victory;
+let results = [];
 const move = (index) => {
     const cell = cells[index];
     const leftDiff = Math.abs(empty.left - cell.left);
@@ -206,7 +224,7 @@ const move = (index) => {
         for (let i = 0; i < 6; i++) {
             if (inputsArray[i].checked) return cell.value === cell.top * (i + 3) + cell.left + 1; 
         }
-    })
+    });
     if (victory) {
         audioWin.play();
         setTimeout(() => {
@@ -215,6 +233,23 @@ const move = (index) => {
         stopButton.style.border = '3px solid #ace494';
         stopButton.style.color = '#9bdf7e';
         clearInterval(interval);
+        for (let i = 0; i < 6; i++) {
+            if (inputsArray[i].checked) {
+                results.push({
+                    fieldSize: labelsArray[i].innerHTML,
+                    moves: counter,
+                    time: time.innerHTML.replace('Time: ', '')
+                });
+            }
+        }
+        localStorage.setItem('results', JSON.stringify(results));
+
+        let resultsItemsArray = document.querySelectorAll('.results-item');
+        for (let i = 0; i < results.length; i++) {
+            if (i < 10) {
+                resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].fieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
+            }
+        }
     }
 
     if (stopButton.innerHTML === 'Play') {
@@ -278,6 +313,7 @@ const createPuzzle = () => {
                 localStorage.setItem('time', time.innerHTML);
                 localStorage.setItem('seconds', sec);
                 localStorage.setItem('minutes', min);
+                if (hour) localStorage.setItem('hours', hour);
                 loadButton.style.border = '3px solid #829bd6';
                 loadButton.style.color = '#829bd6';
                 localStorage.setItem('field-size', Math.sqrt(cells.length));
@@ -301,11 +337,11 @@ const loadPuzzle = () => {
         localStorage.setItem(`input${i+1}-checked`, 'false');
         inputsArray[i].checked = false;
         inputsArray[fieldSize - 3].checked = true;
-            labelsArray[fieldSize - 3].style.border = '3px solid #829bd6';
-            labelsArray[fieldSize - 3].style.borderRadius = '10px';
-            labelsArray[fieldSize - 3].style.color = '#8ce068';
-            localStorage.setItem(`input${i+1}-checked`, 'false');
-            localStorage.setItem(`input${fieldSize - 3 + 1}-checked`, 'true');
+        labelsArray[fieldSize - 3].style.border = '3px solid #829bd6';
+        labelsArray[fieldSize - 3].style.borderRadius = '10px';
+        labelsArray[fieldSize - 3].style.color = '#8ce068';
+        localStorage.setItem(`input${i+1}-checked`, 'false');
+        localStorage.setItem(`input${fieldSize - 3 + 1}-checked`, 'true');
     }
     cellSize = 320/(fieldSize);
     for (let i = 1; i <= (fieldSize)*(fieldSize) - 1; i++) {
@@ -351,15 +387,37 @@ const loadPuzzle = () => {
         localStorage.setItem('time', time.innerHTML);
         localStorage.setItem('seconds', sec);
         localStorage.setItem('minutes', min);
+        if (hour) localStorage.setItem('hours', hour);
         loadButton.style.border = '3px solid #829bd6';
         loadButton.style.color = '#829bd6';
         localStorage.setItem('field-size', Math.sqrt(cells.length));
-    });        
+    });   
+    for (let i = 0; i < 6; i++) {
+        if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
+    }
 }
 
 window.addEventListener('load', () => {
     for (let i = 0; i < 6; i++) {
         if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
+    }
+    let resultsItemsArray = document.querySelectorAll('.results-item');
+    results = JSON.parse(localStorage.getItem('results'));
+    console.log(results)
+    for (let i = 1; i < results.length; i++) {
+        if (results[i].fieldSize[0] !== results[i-1].fieldSize[0]) {
+            results.sort((a, b) => a.fieldSize[0] > b.fieldSize[0] ? 1 : -1);
+        } else if (results[i].moves !== results[i-1].moves) {
+            results.sort((a, b) => a.moves > b.moves ? 1 : -1);
+        } else if (results[i].fieldSize[0] === results[i-1].fieldSize[0] && results[i].moves === results[i-1].moves) {
+            results.sort((a, b) => a.time > b.time ? 1 : -1);
+        }
+    }
+    console.log(results)
+    for (let i = 0; i < results.length; i++) {
+        if (i < 10) {
+            resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].fieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
+        }   
     }
 });
 
@@ -476,6 +534,7 @@ loadButton.addEventListener('click', () => {
         time.innerHTML = localStorage.getItem('time');
         sec = localStorage.getItem('seconds');
         min = localStorage.getItem('minutes');
+        if (hour) hour = localStorage.getItem('hours');
         clearInterval(interval);
         startTimer();
     }
@@ -493,7 +552,24 @@ muteButton.addEventListener('click', () => {
         audioClick.muted = false;
         audioWin.muted = false
     }
+});
+
+resultsButton.addEventListener('click', () => {
+    resultsWrapper.style.transform = 'translateY(0)';
 })
+
+window.addEventListener('click', (event) => {
+    if (!event.composedPath().includes(resultsBox) && !event.composedPath().includes(resultsButton)) {
+        resultsWrapper.style.transform = 'translateY(-100%)';
+    }
+});
+
+let close = document.querySelector('.close-results-button')
+close.addEventListener('click', () => {
+    resultsWrapper.style.transform = 'translateY(-100%)';
+});
+
+
 
 
 
