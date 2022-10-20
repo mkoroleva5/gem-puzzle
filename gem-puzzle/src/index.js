@@ -188,9 +188,8 @@ const move = (index) => {
     if (leftDiff + topDiff > 1) {
         return;
     }
-
+    
     audioClick.play();
-
     cell.element.style.top = `${empty.top * cellSize}px`;
     cell.element.style.left = `${empty.left * cellSize}px`;
 
@@ -203,12 +202,9 @@ const move = (index) => {
     counter++;
 
     victory = cells.every(cell => {
-        if (inputsArray[0].checked) return cell.value === cell.top * 3 + cell.left + 1; 
-        if (inputsArray[1].checked) return cell.value === cell.top * 4 + cell.left + 1; 
-        if (inputsArray[2].checked) return cell.value === cell.top * 5 + cell.left + 1; 
-        if (inputsArray[3].checked) return cell.value === cell.top * 6 + cell.left + 1; 
-        if (inputsArray[4].checked) return cell.value === cell.top * 7 + cell.left + 1; 
-        if (inputsArray[5].checked) return cell.value === cell.top * 8 + cell.left + 1; 
+        for (let i = 0; i < 6; i++) {
+            if (inputsArray[i].checked) return cell.value === cell.top * (i + 3) + cell.left + 1; 
+        }
     })
     
     if (victory) {
@@ -230,6 +226,7 @@ const move = (index) => {
     }
 }
 
+const state = JSON.parse(localStorage.getItem('state'));
 const createPuzzle = () => {
     let numbers;
     cells = [];
@@ -269,13 +266,76 @@ const createPuzzle = () => {
                     element: cell
                 });
                 cell.style.top = `${top * cellSize}px`;
-                cell.style.left = `${left * cellSize}px`;
+                cell.style.left = `${left * cellSize}px`;                
                 field.append(cell);
                 cell.addEventListener('click', () => {
                     move(i);
                     moves.innerHTML = `Moves: ${counter}`;
                 });
             }
+            saveButton.addEventListener('click', () => {
+                localStorage.setItem('state', JSON.stringify(cells));
+                localStorage.setItem('moves', counter);
+                localStorage.setItem('time', time.innerHTML);
+                localStorage.setItem('seconds', sec);
+                localStorage.setItem('minutes', min);
+            });
+        }
+    }
+}
+
+const loadPuzzle = () => {
+    cells = [];
+    empty.top = state[0].top;
+    empty.left = state[0].left;
+    cells.push(empty);
+    for (let j = 0; j < 6; j++) {
+        if (inputsArray[j].checked) {
+            cellSize = 320/(j + 3);
+            console.log(state)
+            for (let i = 1; i <= (j + 3)*(j + 3) - 1; i++) {
+                const cell = document.createElement('div');
+                cell.style.width = `${320/(j + 3)}px`;
+                cell.style.height = `${320/(j + 3)}px`;
+                if (j === 3) {
+                    cell.style.width = `${320/(j + 3) + 0.01}px`;
+                    cell.style.height = `${320/(j + 3) + 0.01}px`;
+                    cell.style.fontSize = '26px';
+                }
+                if (j === 4) {
+                    cell.style.fontSize = '22px';
+                    cell.style.border = '4px solid #829bd6';
+                }
+                if (j === 5) {
+                    cell.style.fontSize = '20px';
+                    cell.style.border = '4px solid #829bd6';
+                }
+                cell.className = 'cell';
+                const value = state[i].value;
+                cell.innerHTML = value;
+                const left = state[i].left;
+                const top = state[i].top;
+                cells.push({
+                    value: value,
+                    left: left,
+                    top: top,
+                    element: cell
+                });
+                cell.style.top = `${top * cellSize}px`;
+                cell.style.left = `${left * cellSize}px`;                
+                field.append(cell);
+                cell.addEventListener('click', () => {
+                    move(i);
+                    moves.innerHTML = `Moves: ${counter}`;
+                });
+            }
+            saveButton.addEventListener('click', () => {
+                localStorage.setItem('state', JSON.stringify(cells));
+                localStorage.setItem('moves', counter);
+                localStorage.setItem('time', time.innerHTML);
+                localStorage.setItem('seconds', sec);
+                localStorage.setItem('minutes', min);
+            });
         }
     }
 }
@@ -287,13 +347,28 @@ window.addEventListener('load', () => {
     if (inputsArray[3].checked) empty.value = 36;
     if (inputsArray[4].checked) empty.value = 49;
     if (inputsArray[5].checked) empty.value = 64;
+    if (state) {
+        loadPuzzle();
+        stopButton.style.border = '3px solid #f9906a';
+        stopButton.style.color = '#f9906a';
+        stopButton.innerHTML = 'Stop';
+        saveButton.style.border = '3px solid #f5cd2e';
+        saveButton.style.color = '#f5cd2e';
+        counter = localStorage.getItem('moves');
+        moves.innerHTML = `Moves: ${counter}`;
+        time.innerHTML = localStorage.getItem('time');
+        sec = localStorage.getItem('seconds');
+        min = localStorage.getItem('minutes');
+        clearInterval(interval);
+        startTimer();
+    }
 });
 
 startButton.addEventListener('click', () => {
     counter = 0;
     sec = 0;
     min = 0;
-    moves.innerHTML = `Moves: ${counter}`
+    moves.innerHTML = `Moves: ${counter}`;
     field.innerHTML = '';
     stopButton.style.border = '3px solid #f9906a';
     stopButton.style.color = '#f9906a';
@@ -338,8 +413,6 @@ startButton.addEventListener('click', () => {
     startTimer();
 });
 
-console.log(cells)
-
 stopButton.addEventListener('click', () => {
     if (field.childNodes.length && !victory) {
         if (stopButton.innerHTML === 'Stop') {
@@ -363,17 +436,13 @@ muteButton.addEventListener('click', () => {
         muteButton.classList.add('mute');
         audioClick.muted = true;
         audioWin.muted = true;
-
     } else {
         muteButtonImg.setAttribute ('src', unmutedImg);
         muteButton.classList.remove('mute');
         audioClick.muted = false;
         audioWin.muted = false
-
     }
-    
 })
-    
 
 
 
