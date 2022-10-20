@@ -23,6 +23,10 @@ let saveButton = document.createElement('button');
 saveButton.className = 'button save-button';
 saveButton.innerHTML = 'Save';
 
+let loadButton = document.createElement('button');
+loadButton.className = 'button load-button';
+loadButton.innerHTML = 'Load';
+
 let resultsButton = document.createElement('button');
 resultsButton.className = 'button results-button';
 resultsButton.innerHTML = 'Results';
@@ -36,7 +40,7 @@ muteButtonImg.setAttribute('src', unmutedImg);
 muteButtonImg.style.width = '17px';
 muteButtonImg.style.height = '17px';
 
-buttonsWrapper.append(startButton, stopButton, saveButton, resultsButton, muteButton);
+buttonsWrapper.append(startButton, stopButton, saveButton, loadButton, resultsButton, muteButton);
 muteButton.append(muteButtonImg);
 
 let moves = document.createElement('div');
@@ -154,12 +158,9 @@ window.addEventListener('load', () => {
 });
 
 form.addEventListener('input', () => {
-    if (inputsArray[0].checked) empty.value = 9;
-    if (inputsArray[1].checked) empty.value = 16;
-    if (inputsArray[2].checked) empty.value = 25;
-    if (inputsArray[3].checked) empty.value = 36;
-    if (inputsArray[4].checked) empty.value = 49;
-    if (inputsArray[5].checked) empty.value = 64;
+    for (let i = 0; i < 6; i++) {
+        if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
+    }
     changeInputView();
 });
 
@@ -206,11 +207,10 @@ const move = (index) => {
             if (inputsArray[i].checked) return cell.value === cell.top * (i + 3) + cell.left + 1; 
         }
     })
-    
     if (victory) {
         audioWin.play();
         setTimeout(() => {
-            alert(`Hooray! You solved the puzzle in ${time.innerHTML[6]}${time.innerHTML[7]}:${time.innerHTML[9]}${time.innerHTML[10]} and ${counter} moves`); 
+            alert(`Hooray! You solved the puzzle in ${time.innerHTML.replace('Time: ', '')} and ${counter} moves`); 
         }, 330);
         stopButton.style.border = '3px solid #ace494';
         stopButton.style.color = '#9bdf7e';
@@ -226,7 +226,6 @@ const move = (index) => {
     }
 }
 
-const state = JSON.parse(localStorage.getItem('state'));
 const createPuzzle = () => {
     let numbers;
     cells = [];
@@ -279,88 +278,88 @@ const createPuzzle = () => {
                 localStorage.setItem('time', time.innerHTML);
                 localStorage.setItem('seconds', sec);
                 localStorage.setItem('minutes', min);
+                loadButton.style.border = '3px solid #829bd6';
+                loadButton.style.color = '#829bd6';
+                localStorage.setItem('field-size', Math.sqrt(cells.length));
             });
         }
     }
 }
 
+const state = JSON.parse(localStorage.getItem('state'));
+
 const loadPuzzle = () => {
+    field.innerHTML = '';
     cells = [];
-    empty.top = state[0].top;
-    empty.left = state[0].left;
+    empty.top = JSON.parse(localStorage.getItem('state'))[0].top;
+    empty.left = JSON.parse(localStorage.getItem('state'))[0].left;
     cells.push(empty);
-    for (let j = 0; j < 6; j++) {
-        if (inputsArray[j].checked) {
-            cellSize = 320/(j + 3);
-            console.log(state)
-            for (let i = 1; i <= (j + 3)*(j + 3) - 1; i++) {
-                const cell = document.createElement('div');
-                cell.style.width = `${320/(j + 3)}px`;
-                cell.style.height = `${320/(j + 3)}px`;
-                if (j === 3) {
-                    cell.style.width = `${320/(j + 3) + 0.01}px`;
-                    cell.style.height = `${320/(j + 3) + 0.01}px`;
-                    cell.style.fontSize = '26px';
-                }
-                if (j === 4) {
-                    cell.style.fontSize = '22px';
-                    cell.style.border = '4px solid #829bd6';
-                }
-                if (j === 5) {
-                    cell.style.fontSize = '20px';
-                    cell.style.border = '4px solid #829bd6';
-                }
-                cell.className = 'cell';
-                const value = state[i].value;
-                cell.innerHTML = value;
-                const left = state[i].left;
-                const top = state[i].top;
-                cells.push({
-                    value: value,
-                    left: left,
-                    top: top,
-                    element: cell
-                });
-                cell.style.top = `${top * cellSize}px`;
-                cell.style.left = `${left * cellSize}px`;                
-                field.append(cell);
-                cell.addEventListener('click', () => {
-                    move(i);
-                    moves.innerHTML = `Moves: ${counter}`;
-                });
-            }
-            saveButton.addEventListener('click', () => {
-                localStorage.setItem('state', JSON.stringify(cells));
-                localStorage.setItem('moves', counter);
-                localStorage.setItem('time', time.innerHTML);
-                localStorage.setItem('seconds', sec);
-                localStorage.setItem('minutes', min);
-            });
-        }
+    const fieldSize = localStorage.getItem('field-size');
+    for (let i = 0; i < 6; i++) {
+        labelsArray[i].style.border = 'none';
+        labelsArray[i].style.color = '#829bd6';
+        localStorage.setItem(`input${i+1}-checked`, 'false');
+        inputsArray[i].checked = false;
+        inputsArray[fieldSize - 3].checked = true;
+            labelsArray[fieldSize - 3].style.border = '3px solid #829bd6';
+            labelsArray[fieldSize - 3].style.borderRadius = '10px';
+            labelsArray[fieldSize - 3].style.color = '#8ce068';
+            localStorage.setItem(`input${i+1}-checked`, 'false');
+            localStorage.setItem(`input${fieldSize - 3 + 1}-checked`, 'true');
     }
+    cellSize = 320/(fieldSize);
+    for (let i = 1; i <= (fieldSize)*(fieldSize) - 1; i++) {
+        const cell = document.createElement('div');
+        cell.style.width = `${320/(fieldSize)}px`;
+        cell.style.height = `${320/(fieldSize)}px`;
+        if (fieldSize === '6') {
+            cell.style.width = `${320/(fieldSize) + 0.01}px`;
+            cell.style.height = `${320/(fieldSize) + 0.01}px`;
+            cell.style.fontSize = '26px';
+        }
+        if (fieldSize === '7') {
+            cell.style.fontSize = '22px';
+            cell.style.border = '4px solid #829bd6';
+        }
+        if (fieldSize === '8') {
+            cell.style.fontSize = '20px';
+            cell.style.border = '4px solid #829bd6';
+        }
+        cell.className = 'cell';
+        const value = JSON.parse(localStorage.getItem('state'))[i].value;
+        cell.innerHTML = value;
+        const left = JSON.parse(localStorage.getItem('state'))[i].left;
+        const top = JSON.parse(localStorage.getItem('state'))[i].top;
+        cells.push({
+            value: value,
+            left: left,
+            top: top,
+            element: cell
+        });
+        cell.style.top = `${top * cellSize}px`;
+        cell.style.left = `${left * cellSize}px`;                
+        field.append(cell);
+        cell.addEventListener('click', () => {
+            move(i);
+            moves.innerHTML = `Moves: ${counter}`;
+        });
+    }
+
+    saveButton.addEventListener('click', () => {
+        localStorage.setItem('state', JSON.stringify(cells));
+        localStorage.setItem('moves', counter);
+        localStorage.setItem('time', time.innerHTML);
+        localStorage.setItem('seconds', sec);
+        localStorage.setItem('minutes', min);
+        loadButton.style.border = '3px solid #829bd6';
+        loadButton.style.color = '#829bd6';
+        localStorage.setItem('field-size', Math.sqrt(cells.length));
+    });        
 }
 
 window.addEventListener('load', () => {
-    if (inputsArray[0].checked) empty.value = 9;
-    if (inputsArray[1].checked) empty.value = 16;
-    if (inputsArray[2].checked) empty.value = 25;
-    if (inputsArray[3].checked) empty.value = 36;
-    if (inputsArray[4].checked) empty.value = 49;
-    if (inputsArray[5].checked) empty.value = 64;
-    if (state) {
-        loadPuzzle();
-        stopButton.style.border = '3px solid #f9906a';
-        stopButton.style.color = '#f9906a';
-        stopButton.innerHTML = 'Stop';
-        saveButton.style.border = '3px solid #f5cd2e';
-        saveButton.style.color = '#f5cd2e';
-        counter = localStorage.getItem('moves');
-        moves.innerHTML = `Moves: ${counter}`;
-        time.innerHTML = localStorage.getItem('time');
-        sec = localStorage.getItem('seconds');
-        min = localStorage.getItem('minutes');
-        clearInterval(interval);
-        startTimer();
+    for (let i = 0; i < 6; i++) {
+        if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
     }
 });
 
@@ -380,6 +379,7 @@ startButton.addEventListener('click', () => {
 
 let sec = 0;
 let min = 0;
+let hour = 0;
 let interval;
 
 function startTimer() {
@@ -392,19 +392,47 @@ function tick() {
         min++;
         sec = sec - 60;
     }
+    if (min >= 60) {
+        hour++;
+        min = min - 60;
+    }
     if (sec < 10) {
         if (min < 10) {
-            time.innerHTML = 'Time: ' + '0' + min + ':0' + sec;
+            if (hour < 10 && hour > 0) {
+                time.innerHTML = 'Time: ' + '0' + hour + ':0' + min + ':0' + sec;
+            } else if (hour >= 10) {
+                time.innerHTML = 'Time: ' + hour + ':0' + min + ':0' + sec;
+            } else if (hour === 0) {
+                time.innerHTML = 'Time: ' + '0' + min + ':0' + sec;
+            }
         } else {
-            time.innerHTML = 'Time: ' + min + ':0' + sec;
+            if (hour < 10 && hour > 0) {
+                time.innerHTML = 'Time: ' + '0' + hour + ':' + min + ':0' + sec;
+            } else if (hour >= 10) {
+                time.innerHTML = 'Time: ' + hour + ':' + min + ':0' + sec;
+            } else if (hour === 0) {
+                time.innerHTML = 'Time: ' + min + ':0' + sec;
+            }
         }
     } else {
         if (min < 10) {
-            time.innerHTML = 'Time: ' + '0' + min + ':' + sec;
+            if (hour < 10 && hour > 0) {
+                time.innerHTML = 'Time: ' + '0' + hour + ':0' + min + ':' + sec;
+            } else if (hour >= 10) {
+                time.innerHTML = 'Time: ' + hour + ':0' + min + ':' + sec;
+            } else if (hour === 0) {
+                time.innerHTML = 'Time: ' + '0' + min + ':' + sec;
+            }
         } else {
-            time.innerHTML = 'Time: ' + min + ':' + sec;
+            if (hour < 10 && hour > 0) {
+                time.innerHTML = 'Time: ' + '0' + hour + ':' + min + ':' + sec;
+            } else if (hour >= 10) {
+                time.innerHTML = 'Time: ' + hour + ':' + min + ':' + sec;
+            } else if (hour === 0) {
+                time.innerHTML = 'Time: ' + min + ':' + sec;
+            }
         }
-    }
+    }    
 }
 
 startButton.addEventListener('click', () => {
@@ -429,6 +457,29 @@ stopButton.addEventListener('click', () => {
         }  
     }
 });
+
+if (state) {
+    loadButton.style.border = '3px solid #829bd6';
+    loadButton.style.color = '#829bd6';
+}
+
+loadButton.addEventListener('click', () => {
+    if (state) {
+        loadPuzzle();
+        stopButton.style.border = '3px solid #f9906a';
+        stopButton.style.color = '#f9906a';
+        stopButton.innerHTML = 'Stop';
+        saveButton.style.border = '3px solid #f5cd2e';
+        saveButton.style.color = '#f5cd2e';
+        counter = localStorage.getItem('moves');
+        moves.innerHTML = `Moves: ${counter}`;
+        time.innerHTML = localStorage.getItem('time');
+        sec = localStorage.getItem('seconds');
+        min = localStorage.getItem('minutes');
+        clearInterval(interval);
+        startTimer();
+    }
+})
 
 muteButton.addEventListener('click', () => {
     if (!muteButton.classList.contains('mute')) {
