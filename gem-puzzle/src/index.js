@@ -158,6 +158,12 @@ if(inputsArray[1].checked &&
     !localStorage.getItem('input4-checked') &&
     !localStorage.getItem('input5-checked') &&
     !localStorage.getItem('input6-checked')) {
+        localStorage.setItem(`input1-checked`, 'false');
+        localStorage.setItem(`input2-checked`, 'true');
+        localStorage.setItem(`input3-checked`, 'false');
+        localStorage.setItem(`input4-checked`, 'false');
+        localStorage.setItem(`input5-checked`, 'false');
+        localStorage.setItem(`input6-checked`, 'false');
         labelsArray[1].style.border = '3px solid #829bd6';
         labelsArray[1].style.borderRadius = '10px';
         labelsArray[1].style.color = '#8ce068';
@@ -197,9 +203,12 @@ const audioClick = new Audio(audioClickSource);
 import audioWinSource from '/assets/goodresult-82807.mp3';
 const audioWin = new Audio(audioWinSource);
 
+let results;
 let victory;
-let results = [];
+
 const move = (index) => {
+    startButton.style.border = '3px solid #ace494';
+    startButton.style.color = '#9bdf7e';
     const cell = cells[index];
     const leftDiff = Math.abs(empty.left - cell.left);
     const topDiff = Math.abs(empty.top - cell.top);
@@ -218,14 +227,16 @@ const move = (index) => {
     empty.top = cell.top;
     cell.left = emptyLeft;
     cell.top = emptyTop;
-    counter++;
-
+    counter++;    
+    
     victory = cells.every(cell => {
         for (let i = 0; i < 6; i++) {
             if (inputsArray[i].checked) return cell.value === cell.top * (i + 3) + cell.left + 1; 
         }
     });
     if (victory) {
+        startButton.style.border = '3px solid #829bd6';
+        startButton.style.color = '#829bd6';
         audioWin.play();
         setTimeout(() => {
             alert(`Hooray! You solved the puzzle in ${time.innerHTML.replace('Time: ', '')} and ${counter} moves`); 
@@ -233,21 +244,30 @@ const move = (index) => {
         stopButton.style.border = '3px solid #ace494';
         stopButton.style.color = '#9bdf7e';
         clearInterval(interval);
-        for (let i = 0; i < 6; i++) {
-            if (inputsArray[i].checked) {
-                results.push({
-                    fieldSize: labelsArray[i].innerHTML,
-                    moves: counter,
-                    time: time.innerHTML.replace('Time: ', '')
-                });
-            }
+        if (!results) {
+            results = [];
+            results.push({
+                resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                moves: counter,
+                time: time.innerHTML.replace('Time: ', ''),
+                speed: counter/(sec + min * 60)
+            });
+        } else {
+            results.push({
+                resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                moves: counter,
+                time: time.innerHTML.replace('Time: ', ''),
+                speed: counter/(sec + min * 60)
+            });
+            results.sort((a, b) => b.resultsFieldSize[0] - a.resultsFieldSize[0] || a.moves - b.moves ||
+                (+`${a.time[0]}${a.time[1]}`*60 + +`${a.time[3]}${a.time[4]}`) - (+`${b.time[0]}${b.time[1]}`*60 + +`${b.time[3]}${b.time[4]}`));
         }
         localStorage.setItem('results', JSON.stringify(results));
 
         let resultsItemsArray = document.querySelectorAll('.results-item');
         for (let i = 0; i < results.length; i++) {
             if (i < 10) {
-                resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].fieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
+                resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].resultsFieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
             }
         }
     }
@@ -321,8 +341,7 @@ const createPuzzle = () => {
         }
     }
 }
-
-const state = JSON.parse(localStorage.getItem('state'));
+ let state;
 
 const loadPuzzle = () => {
     field.innerHTML = '';
@@ -397,27 +416,25 @@ const loadPuzzle = () => {
     }
 }
 
+if (localStorage.getItem('state')) {
+    loadButton.style.border = '3px solid #829bd6';
+    loadButton.style.color = '#829bd6';
+}
+
 window.addEventListener('load', () => {
     for (let i = 0; i < 6; i++) {
         if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
     }
     let resultsItemsArray = document.querySelectorAll('.results-item');
     results = JSON.parse(localStorage.getItem('results'));
-    console.log(results)
-    for (let i = 1; i < results.length; i++) {
-        if (results[i].fieldSize[0] !== results[i-1].fieldSize[0]) {
-            results.sort((a, b) => a.fieldSize[0] > b.fieldSize[0] ? 1 : -1);
-        } else if (results[i].moves !== results[i-1].moves) {
-            results.sort((a, b) => a.moves > b.moves ? 1 : -1);
-        } else if (results[i].fieldSize[0] === results[i-1].fieldSize[0] && results[i].moves === results[i-1].moves) {
-            results.sort((a, b) => a.time > b.time ? 1 : -1);
+    if (results) {
+        results.sort((a, b) => b.resultsFieldSize[0] - a.resultsFieldSize[0] || a.moves - b.moves ||
+        (+`${a.time[0]}${a.time[1]}`*60 + +`${a.time[3]}${a.time[4]}`) - (+`${b.time[0]}${b.time[1]}`*60 + +`${b.time[3]}${b.time[4]}`));
+        for (let i = 0; i < results.length; i++) {
+            if (i < 10) {
+                resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].resultsFieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
+            }   
         }
-    }
-    console.log(results)
-    for (let i = 0; i < results.length; i++) {
-        if (i < 10) {
-            resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].fieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
-        }   
     }
 });
 
@@ -427,6 +444,8 @@ startButton.addEventListener('click', () => {
     min = 0;
     moves.innerHTML = `Moves: ${counter}`;
     field.innerHTML = '';
+    startButton.style.border = '3px solid #ace494';
+    startButton.style.color = '#9bdf7e';
     stopButton.style.border = '3px solid #f9906a';
     stopButton.style.color = '#f9906a';
     stopButton.innerHTML = 'Stop';
@@ -522,8 +541,11 @@ if (state) {
 }
 
 loadButton.addEventListener('click', () => {
+    state = JSON.parse(localStorage.getItem('state'));
     if (state) {
         loadPuzzle();
+        startButton.style.border = '3px solid #ace494';
+        startButton.style.color = '#9bdf7e';
         stopButton.style.border = '3px solid #f9906a';
         stopButton.style.color = '#f9906a';
         stopButton.innerHTML = 'Stop';
