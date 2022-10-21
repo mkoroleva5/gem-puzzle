@@ -290,7 +290,26 @@ const createPuzzle = () => {
     for (let j = 0; j < 6; j++) {
         if (inputsArray[j].checked) {
             cellSize = 320/(j + 3);
+
             numbers = [...Array((j + 3)*(j + 3) - 1).keys()].sort(() => Math.random() - 0.5);
+
+            function countInversions(numbers) {
+                let x = 0;
+                for (let a = 0; a < numbers.length; a++) {
+                    const cur = numbers.filter((el, ind) => {
+                        return el < numbers[a] + 1 && ind > a;
+                    }).length;
+                    x += cur;
+                } 
+                return j % 2 === 0? x : x + 1;      
+            }
+
+            if (!countInversions(numbers)) countInversions();
+            while (countInversions(numbers) % 2 !== 0) {
+                numbers = [...Array((j + 3)*(j + 3) - 1).keys()].sort(() => Math.random() - 0.5);
+                countInversions(numbers);
+            }
+            
             for (let i = 1; i <= (j + 3)*(j + 3) - 1; i++) {
                 const cell = document.createElement('div');
                 cell.style.width = `${320/(j + 3)}px`;
@@ -319,6 +338,7 @@ const createPuzzle = () => {
                     top: top,
                     element: cell
                 });
+
                 cell.style.top = `${top * cellSize}px`;
                 cell.style.left = `${left * cellSize}px`;                
                 field.append(cell);
