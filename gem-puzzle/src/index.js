@@ -202,6 +202,7 @@ const audioWin = new Audio(audioWinSource);
 
 let results;
 let victory;
+let cell;
 
 const move = (index) => {
     empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
@@ -215,7 +216,7 @@ const move = (index) => {
         clearInterval(interval);
         startTimer();
     }
-    const cell = cells[index];
+    cell = cells[index];
     const leftDiff = Math.abs(empty.left - cell.left);
     const topDiff = Math.abs(empty.top - cell.top);
 
@@ -226,14 +227,14 @@ const move = (index) => {
     audioClick.play();
     cell.element.style.top = `${empty.top * cellSize}px`;
     cell.element.style.left = `${empty.left * cellSize}px`;
-
     const emptyLeft = empty.left;
     const emptyTop = empty.top;
     empty.left = cell.left;
     empty.top = cell.top;
     cell.left = emptyLeft;
     cell.top = emptyTop;
-    counter++;    
+    counter++; 
+    moves.innerHTML = `Moves: ${counter}`; 
 
     victory = cells.every(cell => {
         return cell.value === cell.top * Math.floor(320/cellSize) + cell.left + 1;  
@@ -286,6 +287,108 @@ const move = (index) => {
     }
 }
 
+const dragAndDrop = () => {
+    cell.setAttribute('draggable', 'true');
+    field.ondragover = allowDrop;
+    function allowDrop(event) {
+        if (event.target.className === 'field') {
+            event.preventDefault();
+        }
+    }
+    cell.ondragstart = drag;
+    function drag(event) {
+        event.dataTransfer.setData('id', event.target.id);
+    }
+    field.ondrop = drop;
+    function drop(event) {
+        if (event.target.className === 'field') {
+            empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
+            startButton.style.border = '3px solid #ace494';
+            startButton.style.color = '#9bdf7e';
+            stopButton.style.border = '3px solid #f9906a';
+            stopButton.style.color = '#f9906a';
+            saveButton.style.border = '3px solid #f5cd2e';
+            saveButton.style.color = '#f5cd2e';
+            if (counter === 0 && time.innerHTML === 'Time: 00:00') {
+                clearInterval(interval);
+                startTimer();
+            } 
+
+            let cellId = event.dataTransfer.getData('id');
+            cell = cells.find(el => el.value == cellId);
+            
+            const leftDiff = Math.abs(empty.left - cell.left);
+            const topDiff = Math.abs(empty.top - cell.top);
+            if (leftDiff + topDiff > 1) {
+                return;
+            }
+            
+            audioClick.play();
+            cell.element.style.top = `${empty.top * cellSize}px`;
+            cell.element.style.left = `${empty.left * cellSize}px`;
+            const emptyLeft = empty.left;
+            const emptyTop = empty.top;
+            empty.left = cell.left;
+            empty.top = cell.top;
+            cell.left = emptyLeft;
+            cell.top = emptyTop;
+            counter++; 
+            moves.innerHTML = `Moves: ${counter}`;
+
+            victory = cells.every(cell => {
+                return cell.value === cell.top * Math.floor(320/cellSize) + cell.left + 1;  
+            });
+            if (victory) {
+                startButton.style.border = '3px solid #829bd6';
+                startButton.style.color = '#829bd6';
+                saveButton.style.border = '3px solid #ace494';
+                saveButton.style.color = '#9bdf7e';
+                audioWin.play();
+                setTimeout(() => { 
+                    field.innerHTML = `<div class="victory">Hooray!<br><br>You solved<br>the puzzle<br>in ${time.innerHTML.replace('Time: ', '')}<br>and ${counter} moves</div>`;
+                }, 500);
+                stopButton.style.border = '3px solid #ace494';
+                stopButton.style.color = '#9bdf7e';
+                clearInterval(interval);
+                if (!results) {
+                    results = [];
+                    results.push({
+                        resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                        moves: counter,
+                        time: time.innerHTML.replace('Time: ', ''),
+                        speed: counter/(sec + min * 60)
+                    });
+                } else {
+                    results.push({
+                        resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                        moves: counter,
+                        time: time.innerHTML.replace('Time: ', ''),
+                        speed: counter/(sec + min * 60)
+                    });
+                    results.sort((a, b) => b.resultsFieldSize[0] - a.resultsFieldSize[0] || a.moves - b.moves ||
+                        (+`${a.time[0]}${a.time[1]}`*60 + +`${a.time[3]}${a.time[4]}`) - (+`${b.time[0]}${b.time[1]}`*60 + +`${b.time[3]}${b.time[4]}`));
+                }
+                localStorage.setItem('results', JSON.stringify(results));
+        
+                let resultsItemsArray = document.querySelectorAll('.results-item');
+                for (let i = 0; i < results.length; i++) {
+                    if (i < 10) {
+                        resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].resultsFieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
+                    }
+                }
+            }
+
+            if (stopButton.innerHTML === 'Play') {
+                stopButton.style.border = '3px solid #f9906a';
+                stopButton.style.color = '#f9906a';
+                clearInterval(interval);
+                startTimer();
+                stopButton.innerHTML = 'Stop';
+            }
+        }
+    }
+}
+
 const createPuzzle = () => {
     let numbers;
     cells = [];
@@ -317,7 +420,7 @@ const createPuzzle = () => {
             }
             
             for (let i = 1; i <= (j + 3)*(j + 3) - 1; i++) {
-                const cell = document.createElement('div');
+                cell = document.createElement('div');
                 cell.style.width = `${320/(j + 3)}px`;
                 cell.style.height = `${320/(j + 3)}px`;
                 if (j === 3) {
@@ -336,6 +439,7 @@ const createPuzzle = () => {
                 cell.className = 'cell';
                 const value = numbers[i - 1] + 1;
                 cell.innerHTML = value;
+                cell.setAttribute('id', `${value}`);
                 const left = i % (j + 3);
                 const top = (i - left) / (j + 3);
                 cells.push({
@@ -350,8 +454,8 @@ const createPuzzle = () => {
                 field.append(cell);
                 cell.addEventListener('click', () => {
                     move(i);
-                    moves.innerHTML = `Moves: ${counter}`;
                 });
+                dragAndDrop();
             }
             saveButton.addEventListener('click', () => {
                 localStorage.setItem('state', JSON.stringify(cells));
@@ -365,7 +469,7 @@ const createPuzzle = () => {
                 localStorage.setItem('field-size', Math.sqrt(cells.length));
             });
         }
-    }
+    } 
 }
 
 let state;
@@ -392,7 +496,7 @@ const loadPuzzle = () => {
     }
     cellSize = 320/(fieldSize);
     for (let i = 1; i <= (fieldSize)*(fieldSize) - 1; i++) {
-        const cell = document.createElement('div');
+        cell = document.createElement('div');
         cell.style.width = `${320/(fieldSize)}px`;
         cell.style.height = `${320/(fieldSize)}px`;
         if (fieldSize === '6') {
@@ -411,6 +515,7 @@ const loadPuzzle = () => {
         cell.className = 'cell';
         const value = JSON.parse(localStorage.getItem('state'))[i].value;
         cell.innerHTML = value;
+        cell.setAttribute('id', `${value}`);
         const left = JSON.parse(localStorage.getItem('state'))[i].left;
         const top = JSON.parse(localStorage.getItem('state'))[i].top;
         cells.push({
@@ -424,8 +529,8 @@ const loadPuzzle = () => {
         field.append(cell);
         cell.addEventListener('click', () => {
             move(i);
-            moves.innerHTML = `Moves: ${counter}`;
         });
+        dragAndDrop();
     }
 
     saveButton.addEventListener('click', () => {
