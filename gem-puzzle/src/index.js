@@ -181,9 +181,6 @@ window.addEventListener('load', () => {
 });
 
 form.addEventListener('input', () => {
-    for (let i = 0; i < 6; i++) {
-        if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
-    }
     changeInputView();
 });
 
@@ -207,8 +204,17 @@ let results;
 let victory;
 
 const move = (index) => {
+    empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
     startButton.style.border = '3px solid #ace494';
     startButton.style.color = '#9bdf7e';
+    stopButton.style.border = '3px solid #f9906a';
+    stopButton.style.color = '#f9906a';
+    saveButton.style.border = '3px solid #f5cd2e';
+    saveButton.style.color = '#f5cd2e';
+    if (counter === 0 && time.innerHTML === 'Time: 00:00') {
+        clearInterval(interval);
+        startTimer();
+    }
     const cell = cells[index];
     const leftDiff = Math.abs(empty.left - cell.left);
     const topDiff = Math.abs(empty.top - cell.top);
@@ -228,19 +234,19 @@ const move = (index) => {
     cell.left = emptyLeft;
     cell.top = emptyTop;
     counter++;    
-    
+
     victory = cells.every(cell => {
-        for (let i = 0; i < 6; i++) {
-            if (inputsArray[i].checked) return cell.value === cell.top * (i + 3) + cell.left + 1; 
-        }
+        return cell.value === cell.top * Math.floor(320/cellSize) + cell.left + 1;  
     });
     if (victory) {
         startButton.style.border = '3px solid #829bd6';
         startButton.style.color = '#829bd6';
+        saveButton.style.border = '3px solid #ace494';
+        saveButton.style.color = '#9bdf7e';
         audioWin.play();
-        setTimeout(() => {
-            alert(`Hooray! You solved the puzzle in ${time.innerHTML.replace('Time: ', '')} and ${counter} moves`); 
-        }, 330);
+        setTimeout(() => { 
+            field.innerHTML = `<div class="victory">Hooray!<br><br>You solved<br>the puzzle<br>in ${time.innerHTML.replace('Time: ', '')}<br>and ${counter} moves</div>`;
+        }, 500);
         stopButton.style.border = '3px solid #ace494';
         stopButton.style.color = '#9bdf7e';
         clearInterval(interval);
@@ -271,7 +277,6 @@ const move = (index) => {
             }
         }
     }
-
     if (stopButton.innerHTML === 'Play') {
         stopButton.style.border = '3px solid #f9906a';
         stopButton.style.color = '#f9906a';
@@ -286,6 +291,7 @@ const createPuzzle = () => {
     cells = [];
     empty.top = 0;
     empty.left = 0;
+    empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
     cells.push(empty);
     for (let j = 0; j < 6; j++) {
         if (inputsArray[j].checked) {
@@ -361,13 +367,15 @@ const createPuzzle = () => {
         }
     }
 }
- let state;
+
+let state;
 
 const loadPuzzle = () => {
     field.innerHTML = '';
     cells = [];
     empty.top = JSON.parse(localStorage.getItem('state'))[0].top;
     empty.left = JSON.parse(localStorage.getItem('state'))[0].left;
+    empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
     cells.push(empty);
     const fieldSize = localStorage.getItem('field-size');
     for (let i = 0; i < 6; i++) {
@@ -430,10 +438,7 @@ const loadPuzzle = () => {
         loadButton.style.border = '3px solid #829bd6';
         loadButton.style.color = '#829bd6';
         localStorage.setItem('field-size', Math.sqrt(cells.length));
-    });   
-    for (let i = 0; i < 6; i++) {
-        if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
-    }
+    });
 }
 
 if (localStorage.getItem('state')) {
@@ -442,9 +447,6 @@ if (localStorage.getItem('state')) {
 }
 
 window.addEventListener('load', () => {
-    for (let i = 0; i < 6; i++) {
-        if (inputsArray[i].checked) empty.value = (i + 3)*(i + 3); 
-    }
     let resultsItemsArray = document.querySelectorAll('.results-item');
     results = JSON.parse(localStorage.getItem('results'));
     if (results) {
@@ -455,6 +457,18 @@ window.addEventListener('load', () => {
                 resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].resultsFieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
             }   
         }
+    }
+    createPuzzle();
+    if (localStorage.getItem('volume') === 'off') {
+        muteButtonImg.setAttribute ('src', mutedImg);
+        muteButton.classList.add('mute');
+        audioClick.muted = true;
+        audioWin.muted = true;
+    } else if (localStorage.getItem('volume') === 'on') {
+        muteButtonImg.setAttribute ('src', unmutedImg);
+        muteButton.classList.remove('mute');
+        audioClick.muted = false;
+        audioWin.muted = false;
     }
 });
 
@@ -534,12 +548,15 @@ function tick() {
 
 startButton.addEventListener('click', () => {
     time.innerHTML = 'Time: 00:00';
+    sec = 0;
+    min = 0;
+    hour = 0;
     clearInterval(interval);
     startTimer();
 });
 
 stopButton.addEventListener('click', () => {
-    if (field.childNodes.length && !victory) {
+    if (field.childNodes.length) {
         if (stopButton.innerHTML === 'Stop') {
             stopButton.style.border = '3px solid #ace494';
             stopButton.style.color = '#9bdf7e';
@@ -588,11 +605,13 @@ muteButton.addEventListener('click', () => {
         muteButton.classList.add('mute');
         audioClick.muted = true;
         audioWin.muted = true;
+        localStorage.setItem('volume', 'off');
     } else {
         muteButtonImg.setAttribute ('src', unmutedImg);
         muteButton.classList.remove('mute');
         audioClick.muted = false;
-        audioWin.muted = false
+        audioWin.muted = false;
+        localStorage.setItem('volume', 'on');
     }
 });
 
