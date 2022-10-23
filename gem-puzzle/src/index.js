@@ -200,18 +200,54 @@ const audioClick = new Audio(audioClickSource);
 import audioWinSource from '/assets/goodresult-82807.mp3';
 const audioWin = new Audio(audioWinSource);
 
+const startButtonGreen = () => {
+    startButton.style.border = '3px solid #ace494';
+    startButton.style.color = '#9bdf7e';
+};
+const startButtonBlue = () => {
+    startButton.style.border = '3px solid #829bd6';
+    startButton.style.color = '#829bd6';
+};
+const stopButtonGreen = () => {
+    stopButton.style.border = '3px solid #ace494';
+    stopButton.style.color = '#9bdf7e';
+};
+const stopButtonRed = () => {
+    stopButton.style.border = '3px solid #f9906a';
+    stopButton.style.color = '#f9906a';
+};
+const saveButtonGreen = () => {
+    saveButton.style.border = '3px solid #ace494';
+    saveButton.style.color = '#9bdf7e';
+};
+const saveButtonYellow = () => {
+    saveButton.style.border = '3px solid #f5cd2e';
+    saveButton.style.color = '#f5cd2e';
+};
+const loadButtonGreen = () => {
+    loadButton.style.border = '3px solid #ace494';
+    loadButton.style.color = '#9bdf7e';
+};
+const loadButtonBlue = () => {
+    loadButton.style.border = '3px solid #829bd6';
+    loadButton.style.color = '#829bd6';
+};
+
 let results;
 let victory;
 let cell;
 
 const move = (index) => {
-    empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
-    startButton.style.border = '3px solid #ace494';
-    startButton.style.color = '#9bdf7e';
-    stopButton.style.border = '3px solid #f9906a';
-    stopButton.style.color = '#f9906a';
-    saveButton.style.border = '3px solid #f5cd2e';
-    saveButton.style.color = '#f5cd2e';
+    empty.value = Math.floor(300/cellSize)*Math.floor(300/cellSize);
+    startButtonGreen();
+    stopButtonRed();
+    saveButtonYellow();
+    if (stopButton.innerHTML === 'Play') {
+        stopButtonRed();
+        clearInterval(interval);
+        startTimer();
+        stopButton.innerHTML = 'Stop';
+    }
     if (counter === 0 && time.innerHTML === 'Time: 00:00') {
         clearInterval(interval);
         startTimer();
@@ -237,31 +273,28 @@ const move = (index) => {
     moves.innerHTML = `Moves: ${counter}`; 
 
     victory = cells.every(cell => {
-        return cell.value === cell.top * Math.floor(320/cellSize) + cell.left + 1;  
+        return cell.value === cell.top * Math.floor(300/cellSize) + cell.left + 1;  
     });
     if (victory) {
-        startButton.style.border = '3px solid #829bd6';
-        startButton.style.color = '#829bd6';
-        saveButton.style.border = '3px solid #ace494';
-        saveButton.style.color = '#9bdf7e';
+        startButtonBlue();
+        saveButtonGreen();
+        stopButtonGreen();
         audioWin.play();
         setTimeout(() => { 
             field.innerHTML = `<div class="victory">Hooray!<br><br>You solved<br>the puzzle<br>in ${time.innerHTML.replace('Time: ', '')}<br>and ${counter} moves</div>`;
         }, 500);
-        stopButton.style.border = '3px solid #ace494';
-        stopButton.style.color = '#9bdf7e';
         clearInterval(interval);
         if (!results) {
             results = [];
             results.push({
-                resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
                 moves: counter,
                 time: time.innerHTML.replace('Time: ', ''),
                 speed: counter/(sec + min * 60)
             });
         } else {
             results.push({
-                resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
                 moves: counter,
                 time: time.innerHTML.replace('Time: ', ''),
                 speed: counter/(sec + min * 60)
@@ -278,13 +311,6 @@ const move = (index) => {
             }
         }
     }
-    if (stopButton.innerHTML === 'Play') {
-        stopButton.style.border = '3px solid #f9906a';
-        stopButton.style.color = '#f9906a';
-        clearInterval(interval);
-        startTimer();
-        stopButton.innerHTML = 'Stop';
-    }
 }
 
 const dragAndDrop = () => {
@@ -295,20 +321,25 @@ const dragAndDrop = () => {
             event.preventDefault();
         }
     }
+
     cell.ondragstart = drag;
     function drag(event) {
         event.dataTransfer.setData('id', event.target.id);
     }
+
     field.ondrop = drop;
     function drop(event) {
         if (event.target.className === 'field') {
-            empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
-            startButton.style.border = '3px solid #ace494';
-            startButton.style.color = '#9bdf7e';
-            stopButton.style.border = '3px solid #f9906a';
-            stopButton.style.color = '#f9906a';
-            saveButton.style.border = '3px solid #f5cd2e';
-            saveButton.style.color = '#f5cd2e';
+            empty.value = Math.floor(300/cellSize)*Math.floor(300/cellSize);
+            startButtonGreen();
+            stopButtonRed();
+            saveButtonYellow();
+            if (stopButton.innerHTML === 'Play') {
+                stopButtonRed();
+                clearInterval(interval);
+                startTimer();
+                stopButton.innerHTML = 'Stop';
+            }
             if (counter === 0 && time.innerHTML === 'Time: 00:00') {
                 clearInterval(interval);
                 startTimer();
@@ -336,31 +367,28 @@ const dragAndDrop = () => {
             moves.innerHTML = `Moves: ${counter}`;
 
             victory = cells.every(cell => {
-                return cell.value === cell.top * Math.floor(320/cellSize) + cell.left + 1;  
+                return cell.value === cell.top * Math.floor(300/cellSize) + cell.left + 1;  
             });
             if (victory) {
-                startButton.style.border = '3px solid #829bd6';
-                startButton.style.color = '#829bd6';
-                saveButton.style.border = '3px solid #ace494';
-                saveButton.style.color = '#9bdf7e';
+                startButtonBlue();
+                stopButtonGreen();
+                saveButtonGreen();
                 audioWin.play();
                 setTimeout(() => { 
                     field.innerHTML = `<div class="victory">Hooray!<br><br>You solved<br>the puzzle<br>in ${time.innerHTML.replace('Time: ', '')}<br>and ${counter} moves</div>`;
                 }, 500);
-                stopButton.style.border = '3px solid #ace494';
-                stopButton.style.color = '#9bdf7e';
                 clearInterval(interval);
                 if (!results) {
                     results = [];
                     results.push({
-                        resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                        resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
                         moves: counter,
                         time: time.innerHTML.replace('Time: ', ''),
                         speed: counter/(sec + min * 60)
                     });
                 } else {
                     results.push({
-                        resultsFieldSize: `${Math.floor(320/cellSize)}x${Math.floor(320/cellSize)}`,
+                        resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
                         moves: counter,
                         time: time.innerHTML.replace('Time: ', ''),
                         speed: counter/(sec + min * 60)
@@ -369,21 +397,12 @@ const dragAndDrop = () => {
                         (+`${a.time[0]}${a.time[1]}`*60 + +`${a.time[3]}${a.time[4]}`) - (+`${b.time[0]}${b.time[1]}`*60 + +`${b.time[3]}${b.time[4]}`));
                 }
                 localStorage.setItem('results', JSON.stringify(results));
-        
                 let resultsItemsArray = document.querySelectorAll('.results-item');
                 for (let i = 0; i < results.length; i++) {
                     if (i < 10) {
                         resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].resultsFieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
                     }
                 }
-            }
-
-            if (stopButton.innerHTML === 'Play') {
-                stopButton.style.border = '3px solid #f9906a';
-                stopButton.style.color = '#f9906a';
-                clearInterval(interval);
-                startTimer();
-                stopButton.innerHTML = 'Stop';
             }
         }
     }
@@ -394,11 +413,11 @@ const createPuzzle = () => {
     cells = [];
     empty.top = 0;
     empty.left = 0;
-    empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
+    empty.value = Math.floor(300/cellSize)*Math.floor(300/cellSize);
     cells.push(empty);
     for (let j = 0; j < 6; j++) {
         if (inputsArray[j].checked) {
-            cellSize = 320/(j + 3);
+            cellSize = 300/(j + 3);
 
             numbers = [...Array((j + 3)*(j + 3) - 1).keys()].sort(() => Math.random() - 0.5);
 
@@ -421,11 +440,11 @@ const createPuzzle = () => {
             
             for (let i = 1; i <= (j + 3)*(j + 3) - 1; i++) {
                 cell = document.createElement('div');
-                cell.style.width = `${320/(j + 3)}px`;
-                cell.style.height = `${320/(j + 3)}px`;
+                cell.style.width = `${300/(j + 3)}px`;
+                cell.style.height = `${300/(j + 3)}px`;
                 if (j === 3) {
-                    cell.style.width = `${320/(j + 3) + 0.01}px`;
-                    cell.style.height = `${320/(j + 3) + 0.01}px`;
+                    cell.style.width = `${300/(j + 3) + 0.01}px`;
+                    cell.style.height = `${300/(j + 3) + 0.01}px`;
                     cell.style.fontSize = '26px';
                 }
                 if (j === 4) {
@@ -464,8 +483,7 @@ const createPuzzle = () => {
                 localStorage.setItem('seconds', sec);
                 localStorage.setItem('minutes', min);
                 if (hour) localStorage.setItem('hours', hour);
-                loadButton.style.border = '3px solid #829bd6';
-                loadButton.style.color = '#829bd6';
+                loadButtonBlue();
                 localStorage.setItem('field-size', Math.sqrt(cells.length));
             });
         }
@@ -479,7 +497,7 @@ const loadPuzzle = () => {
     cells = [];
     empty.top = JSON.parse(localStorage.getItem('state'))[0].top;
     empty.left = JSON.parse(localStorage.getItem('state'))[0].left;
-    empty.value = Math.floor(320/cellSize)*Math.floor(320/cellSize);
+    empty.value = Math.floor(300/cellSize)*Math.floor(300/cellSize);
     cells.push(empty);
     const fieldSize = localStorage.getItem('field-size');
     for (let i = 0; i < 6; i++) {
@@ -494,14 +512,14 @@ const loadPuzzle = () => {
         localStorage.setItem(`input${i+1}-checked`, 'false');
         localStorage.setItem(`input${fieldSize - 3 + 1}-checked`, 'true');
     }
-    cellSize = 320/(fieldSize);
+    cellSize = 300/(fieldSize);
     for (let i = 1; i <= (fieldSize)*(fieldSize) - 1; i++) {
         cell = document.createElement('div');
-        cell.style.width = `${320/(fieldSize)}px`;
-        cell.style.height = `${320/(fieldSize)}px`;
+        cell.style.width = `${300/(fieldSize)}px`;
+        cell.style.height = `${300/(fieldSize)}px`;
         if (fieldSize === '6') {
-            cell.style.width = `${320/(fieldSize) + 0.01}px`;
-            cell.style.height = `${320/(fieldSize) + 0.01}px`;
+            cell.style.width = `${300/(fieldSize) + 0.01}px`;
+            cell.style.height = `${300/(fieldSize) + 0.01}px`;
             cell.style.fontSize = '26px';
         }
         if (fieldSize === '7') {
@@ -540,15 +558,13 @@ const loadPuzzle = () => {
         localStorage.setItem('seconds', sec);
         localStorage.setItem('minutes', min);
         if (hour) localStorage.setItem('hours', hour);
-        loadButton.style.border = '3px solid #829bd6';
-        loadButton.style.color = '#829bd6';
+        loadButtonBlue();
         localStorage.setItem('field-size', Math.sqrt(cells.length));
     });
 }
 
 if (localStorage.getItem('state')) {
-    loadButton.style.border = '3px solid #829bd6';
-    loadButton.style.color = '#829bd6';
+    loadButtonBlue();
 }
 
 window.addEventListener('load', () => {
@@ -583,13 +599,10 @@ startButton.addEventListener('click', () => {
     min = 0;
     moves.innerHTML = `Moves: ${counter}`;
     field.innerHTML = '';
-    startButton.style.border = '3px solid #ace494';
-    startButton.style.color = '#9bdf7e';
-    stopButton.style.border = '3px solid #f9906a';
-    stopButton.style.color = '#f9906a';
+    startButtonGreen();
+    stopButtonRed();
     stopButton.innerHTML = 'Stop';
-    saveButton.style.border = '3px solid #f5cd2e';
-    saveButton.style.color = '#f5cd2e';
+    saveButtonYellow();
     createPuzzle();
 });
 
@@ -663,13 +676,11 @@ startButton.addEventListener('click', () => {
 stopButton.addEventListener('click', () => {
     if (field.childNodes.length) {
         if (stopButton.innerHTML === 'Stop') {
-            stopButton.style.border = '3px solid #ace494';
-            stopButton.style.color = '#9bdf7e';
+            stopButtonGreen();
             clearInterval(interval);
             stopButton.innerHTML = 'Play';
         } else if (stopButton.innerHTML === 'Play') {
-            stopButton.style.border = '3px solid #f9906a';
-            stopButton.style.color = '#f9906a';
+            stopButtonRed();
             clearInterval(interval);
             startTimer();
             stopButton.innerHTML = 'Stop';
@@ -678,21 +689,17 @@ stopButton.addEventListener('click', () => {
 });
 
 if (state) {
-    loadButton.style.border = '3px solid #829bd6';
-    loadButton.style.color = '#829bd6';
+    loadButtonBlue();
 }
 
 loadButton.addEventListener('click', () => {
     state = JSON.parse(localStorage.getItem('state'));
     if (state) {
         loadPuzzle();
-        startButton.style.border = '3px solid #ace494';
-        startButton.style.color = '#9bdf7e';
-        stopButton.style.border = '3px solid #f9906a';
-        stopButton.style.color = '#f9906a';
+        startButtonGreen();
+        stopButtonRed();
         stopButton.innerHTML = 'Stop';
-        saveButton.style.border = '3px solid #f5cd2e';
-        saveButton.style.color = '#f5cd2e';
+        saveButtonYellow();
         counter = localStorage.getItem('moves');
         moves.innerHTML = `Moves: ${counter}`;
         time.innerHTML = localStorage.getItem('time');
@@ -734,14 +741,3 @@ let close = document.querySelector('.close-results-button')
 close.addEventListener('click', () => {
     resultsWrapper.style.transform = 'translateY(-100%)';
 });
-
-
-
-
-
-
-
-
-
-
-

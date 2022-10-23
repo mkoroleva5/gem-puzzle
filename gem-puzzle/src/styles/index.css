@@ -114,8 +114,8 @@ body {
 }
 
 .results-button:hover {
-  border: 3px solid #b691d8;
-  color: #b691d8;
+  border: 3px solid #829bd6;
+  color: #829bd6;
 }
 
 .mute-button {
@@ -142,8 +142,8 @@ body {
 
 .field {
   position: relative;
-  width: 320px;
-  height: 320px;
+  width: 300px;
+  height: 300px;
   margin: 20px 30px 30px 30px;
   border: 10px solid #ace494;
   border-radius: 10px;
@@ -233,6 +233,6 @@ input {
 
 @media (max-width: 340px) {
   .field {
-    border: 1px solid #ace494;
+    border: 6px solid #ace494;
   }
 }
