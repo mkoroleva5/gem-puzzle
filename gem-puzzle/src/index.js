@@ -224,10 +224,6 @@ const saveButtonYellow = () => {
     saveButton.style.border = '3px solid #f5cd2e';
     saveButton.style.color = '#f5cd2e';
 };
-const loadButtonGreen = () => {
-    loadButton.style.border = '3px solid #ace494';
-    loadButton.style.color = '#9bdf7e';
-};
 const loadButtonBlue = () => {
     loadButton.style.border = '3px solid #829bd6';
     loadButton.style.color = '#829bd6';
@@ -236,6 +232,9 @@ const loadButtonBlue = () => {
 let results;
 let victory;
 let cell;
+let emptyCell;
+
+// -----MOVING CELLS-----
 
 const move = (index) => {
     empty.value = Math.floor(300/cellSize)*Math.floor(300/cellSize);
@@ -271,6 +270,10 @@ const move = (index) => {
     cell.top = emptyTop;
     counter++; 
     moves.innerHTML = `Moves: ${counter}`; 
+    emptyCell.style.top = `${empty.top*cellSize}px`;
+    emptyCell.style.left = `${empty.left*cellSize}px`;
+    emptyCell.style.width = `${cellSize}px`;
+    emptyCell.style.height = `${cellSize}px`;
 
     victory = cells.every(cell => {
         return cell.value === cell.top * Math.floor(300/cellSize) + cell.left + 1;  
@@ -313,100 +316,104 @@ const move = (index) => {
     }
 }
 
+// -----DRAG AND DROP-----
+
 const dragAndDrop = () => {
     cell.setAttribute('draggable', 'true');
-    field.ondragover = allowDrop;
+    emptyCell.ondragover = allowDrop;
     function allowDrop(event) {
-        if (event.target.className === 'field') {
-            event.preventDefault();
-        }
+        event.preventDefault();
     }
-
+    
     cell.ondragstart = drag;
     function drag(event) {
-        event.dataTransfer.setData('id', event.target.id);
+        event.dataTransfer.setData('id', event.target.id);        
     }
 
-    field.ondrop = drop;
+    emptyCell.ondrop = drop;
     function drop(event) {
-        if (event.target.className === 'field') {
-            empty.value = Math.floor(300/cellSize)*Math.floor(300/cellSize);
-            startButtonGreen();
+        empty.value = Math.floor(300/cellSize)*Math.floor(300/cellSize);
+        startButtonGreen();
+        stopButtonRed();
+        saveButtonYellow();
+        if (stopButton.innerHTML === 'Play') {
             stopButtonRed();
-            saveButtonYellow();
-            if (stopButton.innerHTML === 'Play') {
-                stopButtonRed();
-                clearInterval(interval);
-                startTimer();
-                stopButton.innerHTML = 'Stop';
-            }
-            if (counter === 0 && time.innerHTML === 'Time: 00:00') {
-                clearInterval(interval);
-                startTimer();
-            } 
+            clearInterval(interval);
+            startTimer();
+            stopButton.innerHTML = 'Stop';
+        }
+        if (counter === 0 && time.innerHTML === 'Time: 00:00') {
+            clearInterval(interval);
+            startTimer();
+        } 
 
-            let cellId = event.dataTransfer.getData('id');
-            cell = cells.find(el => el.value == cellId);
+        let cellId = event.dataTransfer.getData('id');
+        cell = cells.find(el => el.value == cellId);
             
-            const leftDiff = Math.abs(empty.left - cell.left);
-            const topDiff = Math.abs(empty.top - cell.top);
-            if (leftDiff + topDiff > 1) {
-                return;
-            }
+        const leftDiff = Math.abs(empty.left - cell.left);
+        const topDiff = Math.abs(empty.top - cell.top);
+        if (leftDiff + topDiff > 1) {
+            return;
+        }
             
-            audioClick.play();
-            cell.element.style.top = `${empty.top * cellSize}px`;
-            cell.element.style.left = `${empty.left * cellSize}px`;
-            const emptyLeft = empty.left;
-            const emptyTop = empty.top;
-            empty.left = cell.left;
-            empty.top = cell.top;
-            cell.left = emptyLeft;
-            cell.top = emptyTop;
-            counter++; 
-            moves.innerHTML = `Moves: ${counter}`;
+        audioClick.play();
+        cell.element.style.top = `${empty.top * cellSize}px`;
+        cell.element.style.left = `${empty.left * cellSize}px`;
+        const emptyLeft = empty.left;
+        const emptyTop = empty.top;
+        empty.left = cell.left;
+        empty.top = cell.top;
+        cell.left = emptyLeft;
+        cell.top = emptyTop;
+        counter++; 
+        moves.innerHTML = `Moves: ${counter}`;
+        emptyCell.style.top = `${empty.top*cellSize}px`;
+        emptyCell.style.left = `${empty.left*cellSize}px`;
+        emptyCell.style.width = `${cellSize}px`;
+        emptyCell.style.height = `${cellSize}px`;
 
-            victory = cells.every(cell => {
-                return cell.value === cell.top * Math.floor(300/cellSize) + cell.left + 1;  
-            });
-            if (victory) {
-                startButtonBlue();
-                stopButtonGreen();
-                saveButtonGreen();
-                audioWin.play();
-                setTimeout(() => { 
-                    field.innerHTML = `<div class="victory">Hooray!<br><br>You solved<br>the puzzle<br>in ${time.innerHTML.replace('Time: ', '')}<br>and ${counter} moves</div>`;
-                }, 500);
-                clearInterval(interval);
-                if (!results) {
-                    results = [];
-                    results.push({
-                        resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
-                        moves: counter,
-                        time: time.innerHTML.replace('Time: ', ''),
-                        speed: counter/(sec + min * 60)
-                    });
-                } else {
-                    results.push({
-                        resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
-                        moves: counter,
-                        time: time.innerHTML.replace('Time: ', ''),
-                        speed: counter/(sec + min * 60)
-                    });
-                    results.sort((a, b) => b.resultsFieldSize[0] - a.resultsFieldSize[0] || a.moves - b.moves ||
-                        (+`${a.time[0]}${a.time[1]}`*60 + +`${a.time[3]}${a.time[4]}`) - (+`${b.time[0]}${b.time[1]}`*60 + +`${b.time[3]}${b.time[4]}`));
-                }
-                localStorage.setItem('results', JSON.stringify(results));
-                let resultsItemsArray = document.querySelectorAll('.results-item');
-                for (let i = 0; i < results.length; i++) {
-                    if (i < 10) {
-                        resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].resultsFieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
-                    }
+        victory = cells.every(cell => {
+            return cell.value === cell.top * Math.floor(300/cellSize) + cell.left + 1;  
+        });
+        if (victory) {
+            startButtonBlue();
+            stopButtonGreen();
+            saveButtonGreen();
+            audioWin.play();
+            setTimeout(() => { 
+                field.innerHTML = `<div class="victory">Hooray!<br><br>You solved<br>the puzzle<br>in ${time.innerHTML.replace('Time: ', '')}<br>and ${counter} moves</div>`;
+            }, 500);
+            clearInterval(interval);
+            if (!results) {
+                results = [];
+                results.push({
+                    resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
+                    moves: counter,
+                    time: time.innerHTML.replace('Time: ', ''),
+                    speed: counter/(sec + min * 60)
+                });
+            } else {
+                results.push({
+                    resultsFieldSize: `${Math.floor(300/cellSize)}x${Math.floor(300/cellSize)}`,
+                    moves: counter,
+                    time: time.innerHTML.replace('Time: ', ''),
+                    speed: counter/(sec + min * 60)
+                });
+                results.sort((a, b) => b.resultsFieldSize[0] - a.resultsFieldSize[0] || a.moves - b.moves ||
+                    (+`${a.time[0]}${a.time[1]}`*60 + +`${a.time[3]}${a.time[4]}`) - (+`${b.time[0]}${b.time[1]}`*60 + +`${b.time[3]}${b.time[4]}`));
+            }
+            localStorage.setItem('results', JSON.stringify(results));
+            let resultsItemsArray = document.querySelectorAll('.results-item');
+            for (let i = 0; i < results.length; i++) {
+                if (i < 10) {
+                    resultsItemsArray[i].innerHTML = `${i+1}. ${results[i].resultsFieldSize} - ${results[i].moves} moves - time: ${results[i].time}`;
                 }
             }
         }
     }
 }
+
+// -----GENERATING NEW GAME-----
 
 const createPuzzle = () => {
     let numbers;
@@ -440,6 +447,7 @@ const createPuzzle = () => {
             
             for (let i = 1; i <= (j + 3)*(j + 3) - 1; i++) {
                 cell = document.createElement('div');
+                cell.style.zIndex = '2';
                 cell.style.width = `${300/(j + 3)}px`;
                 cell.style.height = `${300/(j + 3)}px`;
                 if (j === 3) {
@@ -471,10 +479,19 @@ const createPuzzle = () => {
                 cell.style.top = `${top * cellSize}px`;
                 cell.style.left = `${left * cellSize}px`;                
                 field.append(cell);
+
+                emptyCell = document.createElement('div');
+                emptyCell.style.position = 'absolute';
+                emptyCell.style.top = `${empty.top*cellSize}px`;
+                emptyCell.style.left = `${empty.left*cellSize}px`;
+                emptyCell.style.width = `${cellSize}px`;
+                emptyCell.style.height = `${cellSize}px`;
+                field.append(emptyCell);
+
                 cell.addEventListener('click', () => {
                     move(i);
                 });
-                dragAndDrop();
+                dragAndDrop();             
             }
             saveButton.addEventListener('click', () => {
                 localStorage.setItem('state', JSON.stringify(cells));
@@ -490,8 +507,9 @@ const createPuzzle = () => {
     } 
 }
 
-let state;
+// -----LOADING SAVED GAME-----
 
+let state;
 const loadPuzzle = () => {
     field.innerHTML = '';
     cells = [];
@@ -545,6 +563,15 @@ const loadPuzzle = () => {
         cell.style.top = `${top * cellSize}px`;
         cell.style.left = `${left * cellSize}px`;                
         field.append(cell);
+        
+        emptyCell = document.createElement('div');
+        emptyCell.style.position = 'absolute';
+        emptyCell.style.top = `${empty.top*cellSize}px`;
+        emptyCell.style.left = `${empty.left*cellSize}px`;
+        emptyCell.style.width = `${cellSize}px`;
+        emptyCell.style.height = `${cellSize}px`;
+        field.append(emptyCell);
+
         cell.addEventListener('click', () => {
             move(i);
         });
@@ -592,6 +619,9 @@ window.addEventListener('load', () => {
         audioWin.muted = false;
     }
 });
+
+
+// -----STARTING GAME WITH TIMER AND MOVES-----
 
 startButton.addEventListener('click', () => {
     counter = 0;
