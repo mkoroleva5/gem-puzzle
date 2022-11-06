@@ -533,6 +533,7 @@ const loadPuzzle = () => {
     cellSize = 300/(fieldSize);
     for (let i = 1; i <= (fieldSize)*(fieldSize) - 1; i++) {
         cell = document.createElement('div');
+        cell.style.zIndex = '2';
         cell.style.width = `${300/(fieldSize)}px`;
         cell.style.height = `${300/(fieldSize)}px`;
         if (fieldSize === '6') {
