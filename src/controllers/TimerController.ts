@@ -32,11 +32,13 @@ const clearTimer = () => {
 };
 
 const startTimer = () => {
-  state.gameStatus = 'started';
-  stopTimer();
-  interval = setInterval(() => {
-    tick(state.timer);
-  }, 1000);
+  if (state.gameStatus !== 'started') {
+    state.gameStatus = 'started';
+    stopTimer();
+    interval = setInterval(() => {
+      tick(state.timer);
+    }, 1000);
+  }
 
   stateObserver.broadcast('gameStatus', state.gameStatus);
   stateObserver.broadcast('timer', state.timer);
