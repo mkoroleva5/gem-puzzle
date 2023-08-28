@@ -1,6 +1,7 @@
 import { state, stateObserver } from 'store/store';
 import { CellType } from 'types/CellType';
 import { createElement } from 'utils/createElement';
+import { formatTime } from 'utils/formatTime';
 
 export const applyCellView = (
   cell: HTMLElement,
@@ -33,8 +34,22 @@ const updateField = (
   gameField: HTMLElement,
   cellsArray: CellType[],
   gridSize: number,
+  isWin: boolean,
 ) => {
   gameField.innerHTML = '';
+
+  if (isWin) {
+    const victoryField = createElement('div', 'victory');
+
+    victoryField.innerHTML = `Hooray!\nYou solved\nthe puzzle\nin ${formatTime(
+      state.timer,
+    )}\nand ${state.moves} moves`;
+
+    setTimeout(() => {
+      gameField.innerHTML = '';
+      gameField.appendChild(victoryField);
+    }, 500);
+  }
 
   cellsArray.map((cellItem: CellType) => {
     const cell = createElement('div', 'cell');
@@ -54,8 +69,8 @@ export const createGameFieldView = (parent: HTMLElement) => {
 
   parent.appendChild(gameField);
 
-  stateObserver.subscribe(['cellsArray'], (newState) => {
-    updateField(gameField, newState.cellsArray, state.gridSize);
+  stateObserver.subscribe(['cellsArray', 'isWin'], (newState) => {
+    updateField(gameField, newState.cellsArray, state.gridSize, state.isWin);
   });
 
   return gameField;
