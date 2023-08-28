@@ -1,6 +1,7 @@
 import { stateObserver } from 'store/store';
 import { TimerType } from 'types/TimerType';
 import { createElement } from 'utils/createElement';
+import { formatTime } from 'utils/formatTime';
 
 export const createTimerView = (parent: HTMLElement) => {
   const timerView = createElement('div', 'timer');
@@ -9,11 +10,7 @@ export const createTimerView = (parent: HTMLElement) => {
   parent.appendChild(timerView);
 
   const updateTimer = (timer: TimerType) => {
-    const seconds = timer.seconds.toString().padStart(2, '0');
-    const minutes = timer.minutes.toString().padStart(2, '0');
-    const hours = timer.hours > 0 ? timer.hours.toString().padStart(2, '0') + ':' : '';
-
-    timerView.textContent = `Time: ${hours}${minutes}:${seconds}`;
+    timerView.textContent = `Time: ${formatTime(timer)}`;
   };
 
   stateObserver.subscribe(['timer'], (newState) => {
