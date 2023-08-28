@@ -5,14 +5,15 @@ import { createSaveButtonView } from './SaveButtonView';
 import { createLoadButtonView } from './LoadButtonView';
 import { createResultsButtonView } from './ResultsButtonView';
 
-export const createButtonsView = (parent: HTMLElement): void => {
+export const createButtonsView = (parent: HTMLElement) => {
   const buttonView = createElement('div', 'buttons-wrapper');
-  createStartButtonView(buttonView);
-  createStopButtonView(buttonView);
-  createSaveButtonView(buttonView);
-  createLoadButtonView(buttonView);
-  createResultsButtonView(buttonView);
+  const startButton = createStartButtonView(buttonView);
+  const stopButton = createStopButtonView(buttonView);
+  const saveButton = createSaveButtonView(buttonView);
+  const loadButton = createLoadButtonView(buttonView);
+  const resultsButton = createResultsButtonView(buttonView);
+
   parent.appendChild(buttonView);
 
-  return null;
+  return { startButton, stopButton, saveButton, loadButton, resultsButton };
 };
