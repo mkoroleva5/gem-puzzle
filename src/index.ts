@@ -19,14 +19,11 @@ import { createLoadButtonController } from 'controllers/ButtonControllers/LoadBu
 const root = document.getElementById('root');
 
 updateCellsArray();
-const gridSize = state.gridSize;
-const cellsArray = state.cellsArray;
-const results = state.results;
 const gameModel = createGameModel();
 
 const buttonsView = createButtonsView(root);
 
-const resultsTableView = createResultsTableView(root, results);
+const resultsTableView = createResultsTableView(root, state.results);
 const gameStateView = createGameStateView(root);
 const gameFieldView = createGameFieldView(root);
 const fieldSizesView = createFieldSizesView(root);
@@ -51,4 +48,6 @@ createStopButtonController(
 
 createSaveButtonController(buttonsView.saveButton);
 createLoadButtonController(buttonsView.loadButton, gameModel.loadGame);
-createGameFieldController(gameFieldView, gameModel.moveCell);
+createGameFieldController(gameFieldView, gameModel.moveCell, () =>
+  gameModel.checkWin(state.cellsArray),
+);

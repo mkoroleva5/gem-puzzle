@@ -8,6 +8,7 @@ interface State {
   cellsArray: CellType[];
   gameStatus: GameStatusType;
   isGameSaved: boolean;
+  isWin: boolean;
   timer: TimerType;
   moves: number;
   results: string[];
@@ -18,6 +19,7 @@ export const state: State = {
   cellsArray: [],
   gameStatus: 'none',
   isGameSaved: false,
+  isWin: false,
   timer: {
     seconds: 0,
     minutes: 0,

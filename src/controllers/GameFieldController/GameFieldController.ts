@@ -57,6 +57,7 @@ const swapCells = (cell: CellType) => {
 export const createGameFieldController = (
   gameField: HTMLElement,
   moveCell: () => void,
+  checkWin: () => boolean,
 ) => {
   gameField.addEventListener('click', (event) => {
     const clickedCell = event.target as HTMLElement;
@@ -72,6 +73,7 @@ export const createGameFieldController = (
         if (clickedCellData) {
           swapCells(clickedCellData);
           moveCell();
+          checkWin();
         }
       }
     }
