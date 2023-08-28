@@ -1,6 +1,6 @@
 import { EventObserver } from 'store/observer';
 import { CellType } from 'types/CellType';
-import { GameStatusType } from 'types/GameStatus';
+import { GameStatusType } from 'types/GameStatusType';
 import { TimerType } from 'types/TimerType';
 
 interface State {
