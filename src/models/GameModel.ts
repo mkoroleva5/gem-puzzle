@@ -1,8 +1,6 @@
-import {
-  swapCells,
-  updateCellsArray,
-} from 'controllers/GameFieldController/GameFieldController';
+import { updateCellsArray } from 'controllers/GameFieldController/GameFieldController';
 import { clearTimer, startTimer, stopTimer } from 'controllers/TimerController';
+import { state } from 'store/store';
 
 export const createGameModel = () => {
   return {
@@ -25,7 +23,6 @@ export const createGameModel = () => {
     },
     moveCell() {
       startTimer();
-      swapCells();
     },
     checkWin() {},
   };

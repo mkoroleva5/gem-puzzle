@@ -1,9 +1,9 @@
-const createCellsArray = (cellsArrayLength: number) => {
+const createCellsValuesArray = (cellsArrayLength: number) => {
   return Array.from(
     {
       length: cellsArrayLength,
     },
-    (_, index) => index + 1,
+    (_, index) => index,
   ).sort(() => Math.random() - 0.5);
 };
 
@@ -22,15 +22,15 @@ const countInversions = (valuesArray: number[], gridSize: number) => {
 };
 
 export const createCellsValues = (gridSize: number) => {
-  const cellsArrayLength = gridSize * gridSize - 1;
-  let cellsArray = createCellsArray(cellsArrayLength);
+  const cellsArrayLength = gridSize * gridSize;
+  let cellsArray = createCellsValuesArray(cellsArrayLength);
 
   if (!countInversions(cellsArray, gridSize)) {
     countInversions(cellsArray, gridSize);
   }
 
   while (countInversions(cellsArray, gridSize) % 2 !== 0) {
-    cellsArray = createCellsArray(cellsArrayLength);
+    cellsArray = createCellsValuesArray(cellsArrayLength);
     countInversions(cellsArray, gridSize);
   }
 

@@ -33,7 +33,10 @@ const fieldSizesView = createFieldSizesView(root);
 
 gameModel.createField();
 
-createFieldSizesController(fieldSizesView.sizesArray);
+createFieldSizesController(fieldSizesView.sizesArray, () => {
+  gameModel.createField();
+  gameModel.startGame();
+});
 
 createStartButtonController(buttonsView.startButton, () => {
   gameModel.createField();
@@ -48,4 +51,4 @@ createStopButtonController(
 
 createSaveButtonController(buttonsView.saveButton);
 createLoadButtonController(buttonsView.loadButton, gameModel.loadGame);
-createGameFieldController(gameModel.moveCell);
+createGameFieldController(gameFieldView, gameModel.moveCell);

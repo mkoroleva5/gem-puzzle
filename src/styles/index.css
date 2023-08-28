@@ -187,7 +187,7 @@ body {
   font-weight: 700;
   color: #829bd6;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.3s ease;
 }
 
 .field-size-label {
@@ -203,8 +203,10 @@ body {
 }
 
 .field-size-input {
+  height: 8px;
   position: relative;
-  left: 33px;
+  top: 17px;
+  left: 34px;
   transform: scale(4);
   opacity: 0;
   cursor: pointer;

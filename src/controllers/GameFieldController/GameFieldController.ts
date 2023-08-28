@@ -1,6 +1,7 @@
 import { state, stateObserver } from 'store/store';
 import { createCellsValues } from './createCellsArray';
 import { CellType } from 'types/CellType';
+import { applyCellView } from 'views/GameFieldView/GameFieldView';
 
 const updateCellsArray = () => {
   const gridSize = state.gridSize;
@@ -24,28 +25,56 @@ const updateCellsArray = () => {
   console.log(state);
 };
 
-const swapCells = () => {
-  console.log('CELL IS CLICKED');
-  /*  const emptyCell = findEmptySpace(cell, cellsArray, gridSize);
+const swapCells = (cell: CellType) => {
+  const cellsArray = state.cellsArray;
+  const emptyCell = cellsArray.find((cell) => cell.value === 0);
+
+  const leftDiff = Math.abs(emptyCell.left - cell.left);
+  const topDiff = Math.abs(emptyCell.top - cell.top);
+
+  if (leftDiff + topDiff > 1) {
+    return;
+  }
+
   const tempTop = cell.top;
   const tempLeft = cell.left;
 
-  if (emptyCell) {
-    cell.top = emptyCell.top;
-    cell.left = emptyCell.left;
-    emptyCell.top = tempTop;
-    emptyCell.left = tempLeft;
-    console.log('CELL IS SWAPED');
-  } */
+  cell.top = emptyCell.top;
+  cell.left = emptyCell.left;
+  emptyCell.top = tempTop;
+  emptyCell.left = tempLeft;
+
+  applyCellView(cell.element, cell, state.gridSize);
+  applyCellView(emptyCell.element, emptyCell, state.gridSize);
+
+  const updatedCellsArray = [...cellsArray];
+
+  updatedCellsArray[cellsArray.indexOf(emptyCell)] = cell;
+  updatedCellsArray[cellsArray.indexOf(cell)] = emptyCell;
+  state.cellsArray = updatedCellsArray;
 };
 
-export const createGameFieldController = (moveCell: () => void) => {
-  const cellsArray = state.cellsArray;
+export const createGameFieldController = (
+  gameField: HTMLElement,
+  moveCell: () => void,
+) => {
+  gameField.addEventListener('click', (event) => {
+    const clickedCell = event.target as HTMLElement;
 
-  cellsArray.map((cell) => {
-    cell.element.addEventListener('click', () => {
-      moveCell();
-    });
+    if (clickedCell.classList.contains('cell')) {
+      const clickedValue = parseInt(clickedCell.textContent || '0', 10);
+
+      if (clickedValue !== 0) {
+        const clickedCellData = state.cellsArray.find(
+          (cell) => cell.value === clickedValue,
+        );
+
+        if (clickedCellData) {
+          swapCells(clickedCellData);
+          moveCell();
+        }
+      }
+    }
   });
 };
 
