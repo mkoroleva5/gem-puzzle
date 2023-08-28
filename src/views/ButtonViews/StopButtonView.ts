@@ -17,6 +17,9 @@ export const createStopButtonView = (parent: HTMLElement) => {
     } else if (gameStatus === 'started') {
       stopButton.textContent = 'stop';
       colorButton(stopButton, '#f9906a', '#f9906a');
+    } else if (gameStatus === 'none') {
+      stopButton.textContent = 'stop';
+      colorButton(stopButton, '#ace494', '#9bdf7e');
     }
   };
 

@@ -1,8 +1,7 @@
 import { state, stateObserver } from 'store/store';
 
 const saveGame = () => {
-  const gridSize = Math.sqrt(state.cellsArray.length + 1);
-  // если добавить empty cell, надо убрать + 1
+  const gridSize = Math.sqrt(state.cellsArray.length);
 
   localStorage.setItem(
     'saved-game',
@@ -13,7 +12,6 @@ const saveGame = () => {
       moves: state.moves,
     }),
   );
-  console.log(Math.sqrt(state.cellsArray.length + 1));
 
   state.isGameSaved = true;
   stateObserver.broadcast('isGameSaved', state.isGameSaved);
