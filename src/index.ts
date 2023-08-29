@@ -35,10 +35,7 @@ createFieldSizesController(fieldSizesView.sizesArray, () => {
   gameModel.startGame();
 });
 
-createStartButtonController(buttonsView.startButton, () => {
-  gameModel.createField();
-  gameModel.startGame();
-});
+createStartButtonController(buttonsView.startButton, gameModel.startGame);
 
 createStopButtonController(
   buttonsView.stopButton,

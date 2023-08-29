@@ -29,6 +29,7 @@ const clearTimer = () => {
     minutes: 0,
     hours: 0,
   };
+  stateObserver.broadcast('timer', state.timer);
 };
 
 const startTimer = () => {

@@ -1,5 +1,14 @@
 import { updateCellsArray } from 'controllers/GameFieldController/GameFieldController';
-import { clearTimer, startTimer, stopTimer } from 'controllers/TimerController';
+import {
+  clearMoves,
+  increaseMoves,
+} from 'controllers/GameStateController/MovesController';
+import {
+  clearTimer,
+  startTimer,
+  stopTimer,
+} from 'controllers/GameStateController/TimerController';
+
 import { state, stateObserver } from 'store/store';
 import { CellType } from 'types/CellType';
 
@@ -9,6 +18,8 @@ export const createGameModel = () => {
       updateCellsArray();
     },
     startGame() {
+      updateCellsArray();
+      clearMoves();
       clearTimer();
       startTimer();
     },
@@ -24,6 +35,7 @@ export const createGameModel = () => {
     },
     moveCell() {
       startTimer();
+      increaseMoves();
     },
     checkWin(cellsArray: CellType[]) {
       const currentArray = cellsArray.map((cell) => cell.value);
