@@ -20,21 +20,23 @@ const updateCellsArray = () => {
     });
   });
 
+  state.isWin = false;
   state.cellsArray = cellsArray;
-  stateObserver.broadcast('cellsArray', cellsArray);
+  stateObserver.broadcast('isWin', state.isWin);
+  stateObserver.broadcast('cellsArray', state.cellsArray);
   console.log(state);
+};
+
+const canMoveCell = (cell: CellType, emptyCell: CellType) => {
+  const leftDiff = Math.abs(emptyCell.left - cell.left);
+  const topDiff = Math.abs(emptyCell.top - cell.top);
+
+  return leftDiff + topDiff === 1;
 };
 
 const swapCells = (cell: CellType) => {
   const cellsArray = state.cellsArray;
   const emptyCell = cellsArray.find((cell) => cell.value === 0);
-
-  const leftDiff = Math.abs(emptyCell.left - cell.left);
-  const topDiff = Math.abs(emptyCell.top - cell.top);
-
-  if (leftDiff + topDiff > 1) {
-    return;
-  }
 
   const tempTop = cell.top;
   const tempLeft = cell.left;
@@ -61,11 +63,15 @@ export const createGameFieldController = (
 ) => {
   gameField.addEventListener('click', (event) => {
     const clickedCell = event.target as HTMLElement;
+    const cell = state.cellsArray.find((cell) => cell.element === clickedCell);
+    const emptyCell = state.cellsArray.find((cell) => cell.value === 0);
+
+    const isMovable = canMoveCell(cell, emptyCell);
 
     if (clickedCell.classList.contains('cell')) {
       const clickedValue = parseInt(clickedCell.textContent || '0', 10);
 
-      if (clickedValue !== 0) {
+      if (clickedValue !== 0 && isMovable) {
         const clickedCellData = state.cellsArray.find(
           (cell) => cell.value === clickedValue,
         );
