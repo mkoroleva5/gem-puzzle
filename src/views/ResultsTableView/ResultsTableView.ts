@@ -5,13 +5,13 @@ import { state, stateObserver } from 'store/store';
 
 export const createResultsTableView = (parent: HTMLElement) => {
   const resultsWrapper = createElement('div', 'results-wrapper');
-  const resultsBox = createElement('div', 'results-box');
+  const resultsTable = createElement('div', 'results-box');
   const closeResultsButton = createElement('img', 'close-results-button');
 
   closeResultsButton.setAttribute('src', closeImg);
 
-  resultsWrapper.append(resultsBox);
-  resultsBox.append(closeResultsButton);
+  resultsWrapper.append(resultsTable);
+  resultsTable.append(closeResultsButton);
   parent.appendChild(resultsWrapper);
 
   const sortedResults = state.results.sort(
@@ -26,7 +26,7 @@ export const createResultsTableView = (parent: HTMLElement) => {
         ${result.moves} moves - 
         time: ${formatTime(result.time)}`;
 
-    resultsBox.appendChild(resultElement);
+    resultsTable.appendChild(resultElement);
   });
 
   stateObserver.subscribe(['areResultsOpen'], (newState) => {
@@ -37,5 +37,5 @@ export const createResultsTableView = (parent: HTMLElement) => {
     }
   });
 
-  return { closeResultsButton };
+  return { resultsWrapper, closeResultsButton };
 };

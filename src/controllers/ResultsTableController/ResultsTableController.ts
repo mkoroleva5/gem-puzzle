@@ -27,11 +27,16 @@ export const hideResults = () => {
 };
 
 export const createResultsTableController = (
+  resultsWrapper: HTMLElement,
   closeButton: HTMLElement,
   hideResults: () => void,
 ) => {
-  closeButton.addEventListener('click', () => {
-    hideResults();
+  resultsWrapper.addEventListener('click', (event) => {
+    const { target, currentTarget } = event;
+
+    if (target === currentTarget || target === closeButton) {
+      hideResults();
+    }
   });
 };
 

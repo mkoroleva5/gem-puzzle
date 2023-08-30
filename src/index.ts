@@ -44,6 +44,7 @@ createResultButtonController(buttonsView.resultsButton, gameModel.showResults);
 createMuteButtonController(buttonsView.muteButton, gameModel.toggleSound);
 createGameFieldController(gameFieldView, gameModel.moveCell, gameModel.addResult);
 createResultsTableController(
+  resultsTableView.resultsWrapper,
   resultsTableView.closeResultsButton,
   gameModel.hideResults,
 );
