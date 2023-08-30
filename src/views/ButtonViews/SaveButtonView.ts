@@ -9,18 +9,18 @@ export const createSaveButtonView = (parent: HTMLElement) => {
   saveButton.textContent = 'save';
   parent.appendChild(saveButton);
 
-  const updateSaveButton = (gameStatus: GameStatusType) => {
-    if (gameStatus !== 'none') {
-      saveButton.style.border = '3px solid #f5cd2e';
-      saveButton.style.color = '#f5cd2e';
-    } else {
+  const updateSaveButton = (gameStatus: GameStatusType, areResultsOpen: boolean) => {
+    if (gameStatus === 'none' || areResultsOpen) {
       saveButton.style.border = '3px solid #ace494';
       saveButton.style.color = '#9bdf7e';
+    } else {
+      saveButton.style.border = '3px solid #f5cd2e';
+      saveButton.style.color = '#f5cd2e';
     }
   };
 
-  stateObserver.subscribe(['gameStatus'], (newState) => {
-    updateSaveButton(newState.gameStatus);
+  stateObserver.subscribe(['gameStatus', 'areResultsOpen'], (newState) => {
+    updateSaveButton(newState.gameStatus, newState.areResultsOpen);
   });
 
   return saveButton;

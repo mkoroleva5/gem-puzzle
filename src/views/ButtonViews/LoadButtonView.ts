@@ -1,4 +1,4 @@
-import { stateObserver } from 'store/store';
+import { state, stateObserver } from 'store/store';
 import { createElement } from 'utils/createElement';
 
 export const createLoadButtonView = (parent: HTMLElement) => {
@@ -8,10 +8,10 @@ export const createLoadButtonView = (parent: HTMLElement) => {
   loadButton.textContent = 'load';
   parent.appendChild(loadButton);
 
-  const updateLoadButton = () => {
+  const updateLoadButton = (areResultsOpen: boolean) => {
     const savedGame = localStorage.getItem('saved-game');
 
-    if (savedGame) {
+    if (savedGame && !areResultsOpen) {
       loadButton.style.border = '3px solid #829bd6';
       loadButton.style.color = '#829bd6';
     } else {
@@ -20,9 +20,10 @@ export const createLoadButtonView = (parent: HTMLElement) => {
     }
   };
 
-  updateLoadButton();
-  stateObserver.subscribe(['isGameSaved'], () => {
-    updateLoadButton();
+  updateLoadButton(state.areResultsOpen);
+
+  stateObserver.subscribe(['isGameSaved', 'areResultsOpen'], (newState) => {
+    updateLoadButton(newState.areResultsOpen);
   });
 
   return loadButton;
