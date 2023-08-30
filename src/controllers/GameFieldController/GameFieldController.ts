@@ -3,6 +3,7 @@ import { createCellsValues } from './CellsArrayUtils';
 import { CellType } from 'types/CellType';
 import { canMoveCell, checkWin } from './GameFieldUtils';
 import { swapCells } from './CellSwapping';
+import { audioWin } from './GameSounds';
 
 const updateCellsArray = () => {
   const gridSize = state.gridSize;
@@ -29,6 +30,10 @@ const updateCellsArray = () => {
 
 const addWinner = (isWin: boolean, callback: () => void) => {
   if (isWin) {
+    if (state.sound === 'on') {
+      audioWin.play();
+    }
+
     callback();
     state.gameStatus = 'none';
     state.isWin = true;
