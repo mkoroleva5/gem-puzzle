@@ -2,7 +2,7 @@ import 'styles/index.css';
 import { createGameModel } from 'models/GameModel';
 import { createGameFieldView } from 'views/GameFieldView/GameFieldView';
 import { createButtonsView } from 'views/ButtonViews/ButtonsView';
-import { createResultsTableView } from 'views/ResultsTableView';
+import { createResultsTableView } from 'views/ResultsTableView/ResultsTableView';
 import { createGameStateView } from 'views/GameStateView/GameStateView';
 import { createStartButtonController } from 'controllers/ButtonControllers/StartButtonController';
 import { state } from 'store/store';
@@ -15,6 +15,8 @@ import { createFieldSizesView } from 'views/FieldSizesView/FieldSizesView';
 import { createFieldSizesController } from 'controllers/FieldSizesController/FieldSizesController';
 import { createSaveButtonController } from 'controllers/ButtonControllers/SaveButtonController';
 import { createLoadButtonController } from 'controllers/ButtonControllers/LoadButtonController';
+import { createResultButtonController } from 'controllers/ButtonControllers/ResultButtonController';
+import { createResultsTableController } from 'controllers/ResultsTableController/ResultsTableController';
 
 const root = document.getElementById('root');
 
@@ -23,7 +25,7 @@ const gameModel = createGameModel();
 
 const buttonsView = createButtonsView(root);
 
-const resultsTableView = createResultsTableView(root, state.results);
+const resultsTableView = createResultsTableView(root);
 const gameStateView = createGameStateView(root);
 const gameFieldView = createGameFieldView(root);
 const fieldSizesView = createFieldSizesView(root);
@@ -34,17 +36,19 @@ createFieldSizesController(fieldSizesView.sizesArray, () => {
   gameModel.createField();
   gameModel.startGame();
 });
-
 createStartButtonController(buttonsView.startButton, gameModel.startGame);
-
 createStopButtonController(
   buttonsView.stopButton,
   gameModel.stopGame,
   gameModel.resumeGame,
 );
-
 createSaveButtonController(buttonsView.saveButton);
 createLoadButtonController(buttonsView.loadButton, gameModel.loadGame);
+createResultButtonController(buttonsView.resultsButton, gameModel.showResults);
+createResultsTableController(
+  resultsTableView.closeResultsButton,
+  gameModel.hideResults,
+);
 createGameFieldController(gameFieldView, gameModel.moveCell, () =>
   gameModel.checkWin(state.cellsArray),
 );

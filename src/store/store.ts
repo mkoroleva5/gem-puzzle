@@ -1,6 +1,7 @@
 import { EventObserver } from 'store/observer';
 import { CellType } from 'types/CellType';
 import { GameStatusType } from 'types/GameStatusType';
+import { ResultType } from 'types/ResultType';
 import { TimerType } from 'types/TimerType';
 
 interface State {
@@ -11,7 +12,8 @@ interface State {
   isWin: boolean;
   timer: TimerType;
   moves: number;
-  results: string[];
+  results: ResultType[];
+  areResultsOpen: boolean;
 }
 
 export const state: State = {
@@ -26,7 +28,8 @@ export const state: State = {
     hours: 0,
   },
   moves: 0,
-  results: [],
+  results: JSON.parse(localStorage.getItem('results')) || [],
+  areResultsOpen: false,
 };
 
 //export const state = new State();

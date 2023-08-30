@@ -8,6 +8,7 @@ import {
   startTimer,
   stopTimer,
 } from 'controllers/GameStateController/TimerController';
+import { addResult } from 'controllers/ResultsTableController/ResultsTableController';
 
 import { state, stateObserver } from 'store/store';
 import { CellType } from 'types/CellType';
@@ -47,6 +48,7 @@ export const createGameModel = () => {
       const isWin = currentArray.every((value, index) => value === winArray[index]);
 
       if (isWin) {
+        addResult();
         stopTimer();
         state.gameStatus = 'none';
         state.isWin = true;
@@ -55,6 +57,20 @@ export const createGameModel = () => {
       }
 
       return isWin;
+    },
+    showResults() {
+      stopTimer();
+      state.gameStatus = 'stopped';
+      state.areResultsOpen = true;
+      stateObserver.broadcast('gameStatus', state.gameStatus);
+      stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
+    },
+    hideResults() {
+      startTimer();
+      state.gameStatus = 'started';
+      state.areResultsOpen = false;
+      stateObserver.broadcast('gameStatus', state.gameStatus);
+      stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
     },
   };
 };
