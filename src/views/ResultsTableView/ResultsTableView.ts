@@ -1,5 +1,5 @@
 import { createElement } from 'utils/createElement';
-import closeImg from 'assets/close.png';
+import closeIcon from 'assets/close.svg';
 import { formatTime } from 'utils/formatTime';
 import { state, stateObserver } from 'store/store';
 
@@ -8,7 +8,7 @@ export const createResultsTableView = (parent: HTMLElement) => {
   const resultsTable = createElement('div', 'results-box');
   const closeResultsButton = createElement('img', 'close-results-button');
 
-  closeResultsButton.setAttribute('src', closeImg);
+  closeResultsButton.setAttribute('src', closeIcon);
 
   resultsWrapper.append(resultsTable);
   resultsTable.append(closeResultsButton);

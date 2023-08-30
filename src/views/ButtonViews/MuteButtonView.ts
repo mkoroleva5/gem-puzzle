@@ -1,8 +1,8 @@
 import { state, stateObserver } from 'store/store';
 import { SoundType } from 'types/SoundType';
 import { createElement } from 'utils/createElement';
-import mutedIcon from 'assets/muted.png';
-import unmutedIcon from 'assets/unmuted.png';
+import mutedIcon from 'assets/muted.svg';
+import unmutedIcon from 'assets/unmuted.svg';
 
 export const createMuteButtonView = (parent: HTMLElement) => {
   const muteButton = createElement('div', 'button');
