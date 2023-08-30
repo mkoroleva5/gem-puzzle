@@ -51,5 +51,18 @@ export function buildLoaders({ isDev }: BuildOptions): webpack.RuleSetRule[] {
     use: ['@svgr/webpack'],
   };
 
-  return [babelLoader, typescriptLoader, cssLoader, scssLoader, fileLoader, svgLoader];
+  const soundLoader = {
+    test: /\.(mp3|wav)$/,
+    type: 'asset',
+  };
+
+  return [
+    babelLoader,
+    typescriptLoader,
+    cssLoader,
+    scssLoader,
+    fileLoader,
+    svgLoader,
+    soundLoader,
+  ];
 }
