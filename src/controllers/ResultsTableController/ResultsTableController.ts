@@ -16,6 +16,16 @@ const addResult = () => {
   stateObserver.broadcast('results', state.results);
 };
 
+export const showResults = () => {
+  state.areResultsOpen = true;
+  stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
+};
+
+export const hideResults = () => {
+  state.areResultsOpen = false;
+  stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
+};
+
 export const createResultsTableController = (
   closeButton: HTMLElement,
   hideResults: () => void,

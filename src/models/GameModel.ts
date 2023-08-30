@@ -8,10 +8,11 @@ import {
   startTimer,
   stopTimer,
 } from 'controllers/GameStateController/TimerController';
-import { addResult } from 'controllers/ResultsTableController/ResultsTableController';
-
-import { state, stateObserver } from 'store/store';
-import { CellType } from 'types/CellType';
+import {
+  addResult,
+  hideResults,
+  showResults,
+} from 'controllers/ResultsTableController/ResultsTableController';
 
 export const createGameModel = () => {
   return {
@@ -38,39 +39,17 @@ export const createGameModel = () => {
       startTimer();
       increaseMoves();
     },
-    checkWin(cellsArray: CellType[]) {
-      const currentArray = cellsArray.map((cell) => cell.value);
-      const winArray = currentArray.slice().sort((a, b) => a - b);
-      const emptyValue = winArray.shift();
-
-      winArray.push(emptyValue);
-
-      const isWin = currentArray.every((value, index) => value === winArray[index]);
-
-      if (isWin) {
-        addResult();
-        stopTimer();
-        state.gameStatus = 'none';
-        state.isWin = true;
-        stateObserver.broadcast('gameStatus', state.gameStatus);
-        stateObserver.broadcast('isWin', state.isWin);
-      }
-
-      return isWin;
+    addResult() {
+      addResult();
+      stopTimer();
     },
     showResults() {
       stopTimer();
-      state.gameStatus = 'stopped';
-      state.areResultsOpen = true;
-      stateObserver.broadcast('gameStatus', state.gameStatus);
-      stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
+      showResults();
     },
     hideResults() {
+      hideResults();
       startTimer();
-      state.gameStatus = 'started';
-      state.areResultsOpen = false;
-      stateObserver.broadcast('gameStatus', state.gameStatus);
-      stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
     },
   };
 };
