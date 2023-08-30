@@ -1,8 +1,13 @@
 import { state } from 'store/store';
 import { CellType } from 'types/CellType';
 import { applyCellView } from 'views/GameFieldView/GameFieldView';
+import { audioClick } from './GameSounds';
 
 export const swapCells = (cell: CellType) => {
+  if (state.sound === 'on') {
+    audioClick.play();
+  }
+
   const cellsArray = state.cellsArray;
   const emptyCell = cellsArray.find((cell) => cell.value === 0);
 
