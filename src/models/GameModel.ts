@@ -1,4 +1,5 @@
 import { toggleSound } from 'controllers/ButtonControllers/MuteButtonController';
+import { toggleTheme } from 'controllers/ButtonControllers/ThemeButtonController';
 import { updateCellsArray } from 'controllers/GameFieldController/GameFieldController';
 import {
   clearMoves,
@@ -54,6 +55,9 @@ export const createGameModel = () => {
     },
     toggleSound() {
       toggleSound();
+    },
+    toggleTheme() {
+      toggleTheme();
     },
   };
 };

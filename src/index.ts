@@ -14,8 +14,15 @@ import { createLoadButtonController } from 'controllers/ButtonControllers/LoadBu
 import { createResultButtonController } from 'controllers/ButtonControllers/ResultButtonController';
 import { createResultsTableController } from 'controllers/ResultsTableController/ResultsTableController';
 import { createMuteButtonController } from 'controllers/ButtonControllers/MuteButtonController';
+import {
+  createThemeButtonController,
+  setBodyBackground,
+} from 'controllers/ButtonControllers/ThemeButtonController';
+import { state } from 'store/store';
 
 const root = document.getElementById('root');
+
+setBodyBackground(root, state.theme);
 
 const gameModel = createGameModel();
 
@@ -42,6 +49,7 @@ createSaveButtonController(buttonsView.saveButton);
 createLoadButtonController(buttonsView.loadButton, gameModel.loadGame);
 createResultButtonController(buttonsView.resultsButton, gameModel.showResults);
 createMuteButtonController(buttonsView.muteButton, gameModel.toggleSound);
+createThemeButtonController(buttonsView.themeButton, gameModel.toggleTheme, root);
 createGameFieldController(gameFieldView, gameModel.moveCell, gameModel.addResult);
 createResultsTableController(
   resultsTableView.resultsWrapper,

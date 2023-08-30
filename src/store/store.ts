@@ -3,6 +3,7 @@ import { CellType } from 'types/CellType';
 import { GameStatusType } from 'types/GameStatusType';
 import { ResultType } from 'types/ResultType';
 import { SoundType } from 'types/SoundType';
+import { ThemeType } from 'types/ThemeType';
 import { TimerType } from 'types/TimerType';
 
 interface State {
@@ -16,6 +17,7 @@ interface State {
   results: ResultType[];
   areResultsOpen: boolean;
   sound: SoundType;
+  theme: ThemeType;
 }
 
 export const state: State = {
@@ -33,6 +35,7 @@ export const state: State = {
   results: JSON.parse(localStorage.getItem('results')) || [],
   areResultsOpen: false,
   sound: (localStorage.getItem('sound') as SoundType) || 'on',
+  theme: (localStorage.getItem('theme') as ThemeType) || 'light',
 };
 
 export const stateObserver = new EventObserver(state);
