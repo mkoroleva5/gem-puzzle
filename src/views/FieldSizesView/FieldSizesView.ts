@@ -20,8 +20,8 @@ export const createFieldSizesView = (parent: HTMLElement) => {
     fieldSizeLabel.htmlFor = `input-${size}`;
     fieldSizeLabel.textContent = `${size}x${size}`;
 
-    fieldSizes.appendChild(fieldSizeInput);
     fieldSizes.appendChild(fieldSizeLabel);
+    fieldSizeLabel.appendChild(fieldSizeInput);
 
     sizesArray.push({
       size: size,
