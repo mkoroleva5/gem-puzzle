@@ -1,3 +1,4 @@
+import { toggleSound } from 'controllers/ButtonControllers/MuteButtonController';
 import { updateCellsArray } from 'controllers/GameFieldController/GameFieldController';
 import {
   clearMoves,
@@ -50,6 +51,9 @@ export const createGameModel = () => {
     hideResults() {
       hideResults();
       startTimer();
+    },
+    toggleSound() {
+      toggleSound();
     },
   };
 };

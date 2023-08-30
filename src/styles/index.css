@@ -12,7 +12,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding-top: 50px;
-  background-image: url('assets/6728670.png');
+  background-image: url('assets/bg-light.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -132,6 +132,11 @@ body {
   justify-content: center;
   align-items: center;
   transition: 0.3s;
+}
+
+.mute-icon {
+  width: 17px;
+  height: 17px;
 }
 
 .state-wrapper {

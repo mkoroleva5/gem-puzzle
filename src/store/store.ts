@@ -2,6 +2,7 @@ import { EventObserver } from 'store/observer';
 import { CellType } from 'types/CellType';
 import { GameStatusType } from 'types/GameStatusType';
 import { ResultType } from 'types/ResultType';
+import { SoundType } from 'types/SoundType';
 import { TimerType } from 'types/TimerType';
 
 interface State {
@@ -14,6 +15,7 @@ interface State {
   moves: number;
   results: ResultType[];
   areResultsOpen: boolean;
+  sound: SoundType;
 }
 
 export const state: State = {
@@ -30,7 +32,7 @@ export const state: State = {
   moves: 0,
   results: JSON.parse(localStorage.getItem('results')) || [],
   areResultsOpen: false,
+  sound: (localStorage.getItem('sound') as SoundType) || 'on',
 };
 
-//export const state = new State();
 export const stateObserver = new EventObserver(state);

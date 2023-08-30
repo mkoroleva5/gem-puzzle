@@ -4,6 +4,7 @@ import { createStopButtonView } from './StopButtonView';
 import { createSaveButtonView } from './SaveButtonView';
 import { createLoadButtonView } from './LoadButtonView';
 import { createResultsButtonView } from './ResultsButtonView';
+import { createMuteButtonView } from './MuteButtonView';
 
 export const createButtonsView = (parent: HTMLElement) => {
   const buttonView = createElement('div', 'buttons-wrapper');
@@ -12,8 +13,9 @@ export const createButtonsView = (parent: HTMLElement) => {
   const saveButton = createSaveButtonView(buttonView);
   const loadButton = createLoadButtonView(buttonView);
   const resultsButton = createResultsButtonView(buttonView);
+  const muteButton = createMuteButtonView(buttonView);
 
   parent.appendChild(buttonView);
 
-  return { startButton, stopButton, saveButton, loadButton, resultsButton };
+  return { startButton, stopButton, saveButton, loadButton, resultsButton, muteButton };
 };
