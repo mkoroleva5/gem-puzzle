@@ -37,11 +37,11 @@ export const createFieldSizesView = (parent: HTMLElement) => {
       if (gridSize === size) {
         input.checked = true;
         label.style.border = '3px solid #829bd6';
-        label.style.color = '#8ce068';
+        label.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
       } else {
         input.checked = false;
         label.style.border = 'none';
-        label.style.color = '#829bd6';
+        label.style.backgroundColor = 'transparent';
       }
     });
   };
