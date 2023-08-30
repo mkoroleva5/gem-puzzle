@@ -7,10 +7,8 @@ export const createStopButtonController = (
 ) => {
   stopButton.addEventListener('click', () => {
     if (state.gameStatus === 'started') {
-      state.gameStatus = 'stopped';
       stopGame();
     } else if (state.gameStatus === 'stopped') {
-      state.gameStatus = 'started';
       resumeGame();
     }
 
