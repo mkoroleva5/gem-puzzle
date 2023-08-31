@@ -5,6 +5,7 @@ import { ResultType } from 'types/ResultType';
 import { SoundType } from 'types/SoundType';
 import { ThemeType } from 'types/ThemeType';
 import { TimerType } from 'types/TimerType';
+import { getItemFromLocalStorage } from 'utils/getItemFromLocalStorage';
 
 interface State {
   gridSize: number;
@@ -32,7 +33,7 @@ export const state: State = {
     hours: 0,
   },
   moves: 0,
-  results: JSON.parse(localStorage.getItem('results')) || [],
+  results: getItemFromLocalStorage('results') || [],
   areResultsOpen: false,
   sound: (localStorage.getItem('sound') as SoundType) || 'on',
   theme: (localStorage.getItem('theme') as ThemeType) || 'light',

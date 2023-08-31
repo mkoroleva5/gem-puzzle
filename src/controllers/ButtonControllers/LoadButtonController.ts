@@ -1,19 +1,8 @@
 import { state, stateObserver } from 'store/store';
-
-const getSavedGame = () => {
-  let savedGame;
-
-  try {
-    savedGame = JSON.parse(localStorage.getItem('saved-game'));
-  } catch (e) {
-    savedGame = null;
-  }
-
-  return savedGame;
-};
+import { getItemFromLocalStorage } from 'utils/getItemFromLocalStorage';
 
 export const loadGame = () => {
-  const savedGame = getSavedGame();
+  const savedGame = getItemFromLocalStorage('saved-game');
 
   if (savedGame) {
     state.isWin = false;
@@ -34,7 +23,7 @@ export const createLoadButtonController = (
   loadGame: () => void,
 ) => {
   loadButton.addEventListener('click', () => {
-    const savedGame = getSavedGame();
+    const savedGame = getItemFromLocalStorage('saved-game');
 
     if (savedGame) {
       loadGame();
