@@ -31,7 +31,13 @@ body {
 .field-size-wrapper {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 10px;
+}
+
+.field-size-wrapper {
+  flex-wrap: wrap;
+  margin: 0 50px;
 }
 
 .results-wrapper {
@@ -48,10 +54,11 @@ body {
 }
 
 .results-box {
+  position: relative;
   width: 300px;
   height: 300px;
   margin-top: 150px;
-  padding: 10px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -76,13 +83,14 @@ body {
 .close-results-button {
   width: 15px;
   height: 15px;
-  position: relative;
-  left: 285px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
 }
 
 .buttons-wrapper {
-  margin: 0 20px;
+  margin: 0 60px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -227,40 +235,13 @@ body {
   cursor: pointer;
 }
 
-@media (max-width: 420px) {
-  .field-size-wrapper {
-    position: relative;
-    right: 25px;
-    padding: 0 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 0px 0px;
-    grid-template-areas:
-      '. . . . . .'
-      '. . . . . .';
-  }
-
-  .field-size-input {
-    transform: scale(1);
-    width: 40px;
-    height: 40px;
-    position: relative;
-    left: 55px;
-  }
-
-  .moves,
-  .time {
-    margin-top: 20px;
-  }
-
-  .field {
-    margin-top: 10px;
-  }
-}
-
 @media (max-width: 340px) {
   .field {
     border: 6px solid #ace494;
+  }
+
+  .results-box {
+    margin: 4px;
+    margin-top: 230px;
   }
 }

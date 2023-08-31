@@ -3,13 +3,16 @@ import { CellType } from 'types/CellType';
 import { createElement } from 'utils/createElement';
 import { formatTime } from 'utils/formatTime';
 
+const fieldSize = 300;
+const fontSize = 130;
+
 export const applyCellView = (
   cell: HTMLElement,
   cellItem: CellType,
   gridSize: number,
 ) => {
-  const cellSize = 300 / gridSize;
-  const cellFontSize = 130 / gridSize;
+  const cellSize = fieldSize / gridSize;
+  const cellFontSize = fontSize / gridSize;
 
   cell.style.width = `${cellSize}px`;
   cell.style.height = `${cellSize}px`;
