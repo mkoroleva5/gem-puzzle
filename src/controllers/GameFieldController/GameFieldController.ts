@@ -42,7 +42,7 @@ const addWinner = (isWin: boolean, callback: () => void) => {
   }
 };
 
-export const createGameFieldController = (
+const createGameFieldController = (
   gameField: HTMLElement,
   moveCell: () => void,
   addResult: () => void,
@@ -74,4 +74,4 @@ export const createGameFieldController = (
   });
 };
 
-export { updateCellsArray, swapCells };
+export { updateCellsArray, createGameFieldController };

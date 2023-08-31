@@ -1,6 +1,6 @@
 import { state, stateObserver } from 'store/store';
 
-export const createStopButtonController = (
+const createStopButtonController = (
   stopButton: HTMLElement,
   stopGame: () => void,
   resumeGame: () => void,
@@ -15,3 +15,5 @@ export const createStopButtonController = (
     stateObserver.broadcast('gameStatus', state.gameStatus);
   });
 };
+
+export { createStopButtonController };

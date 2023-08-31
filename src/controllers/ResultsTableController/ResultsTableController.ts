@@ -23,17 +23,17 @@ const addResult = () => {
   console.log(state.results);
 };
 
-export const showResults = () => {
+const showResults = () => {
   state.areResultsOpen = true;
   stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
 };
 
-export const hideResults = () => {
+const hideResults = () => {
   state.areResultsOpen = false;
   stateObserver.broadcast('areResultsOpen', state.areResultsOpen);
 };
 
-export const createResultsTableController = (
+const createResultsTableController = (
   resultsWrapper: HTMLElement,
   closeButton: HTMLElement,
   hideResults: () => void,
@@ -47,4 +47,4 @@ export const createResultsTableController = (
   });
 };
 
-export { addResult };
+export { addResult, showResults, hideResults, createResultsTableController };

@@ -1,10 +1,7 @@
 import { state, stateObserver } from 'store/store';
 import { SizeType } from 'types/SizeType';
 
-export const createFieldSizesController = (
-  sizesArray: SizeType[],
-  startGame: () => void,
-) => {
+const createFieldSizesController = (sizesArray: SizeType[], startGame: () => void) => {
   sizesArray.map((sizeData) => {
     const { size, input } = sizeData;
 
@@ -15,3 +12,5 @@ export const createFieldSizesController = (
     });
   });
 };
+
+export { createFieldSizesController };

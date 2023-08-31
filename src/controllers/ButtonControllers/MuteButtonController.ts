@@ -1,6 +1,6 @@
 import { state, stateObserver } from 'store/store';
 
-export const toggleSound = () => {
+const toggleSound = () => {
   if (state.sound === 'on') {
     localStorage.setItem('sound', 'off');
     state.sound = 'off';
@@ -12,7 +12,7 @@ export const toggleSound = () => {
   stateObserver.broadcast('sound', state.sound);
 };
 
-export const createMuteButtonController = (
+const createMuteButtonController = (
   muteButton: HTMLElement,
   toggleSound: () => void,
 ) => {
@@ -20,3 +20,5 @@ export const createMuteButtonController = (
     toggleSound();
   });
 };
+
+export { toggleSound, createMuteButtonController };

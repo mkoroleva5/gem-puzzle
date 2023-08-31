@@ -17,10 +17,12 @@ const saveGame = () => {
   stateObserver.broadcast('isGameSaved', state.isGameSaved);
 };
 
-export const createSaveButtonController = (saveButton: HTMLElement) => {
+const createSaveButtonController = (saveButton: HTMLElement, saveGame: () => void) => {
   saveButton.addEventListener('click', () => {
     if (state.isGameSaved === false) {
       saveGame();
     }
   });
 };
+
+export { saveGame, createSaveButtonController };

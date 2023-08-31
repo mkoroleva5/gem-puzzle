@@ -1,5 +1,6 @@
 import { loadGame } from 'controllers/ButtonControllers/LoadButtonController';
 import { toggleSound } from 'controllers/ButtonControllers/MuteButtonController';
+import { saveGame } from 'controllers/ButtonControllers/SaveButtonController';
 import { toggleTheme } from 'controllers/ButtonControllers/ThemeButtonController';
 import { updateCellsArray } from 'controllers/GameFieldController/GameFieldController';
 import {
@@ -33,6 +34,9 @@ export const createGameModel = () => {
     },
     resumeGame() {
       startTimer();
+    },
+    saveGame() {
+      saveGame();
     },
     loadGame() {
       loadGame();

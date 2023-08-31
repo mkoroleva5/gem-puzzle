@@ -1,6 +1,6 @@
 import { state, stateObserver } from 'store/store';
 
-export const createStartButtonController = (
+const createStartButtonController = (
   startButton: HTMLElement,
   startGame: () => void,
 ) => {
@@ -12,3 +12,5 @@ export const createStartButtonController = (
     stateObserver.broadcast('isGameSaved', state.isGameSaved);
   });
 };
+
+export { createStartButtonController };

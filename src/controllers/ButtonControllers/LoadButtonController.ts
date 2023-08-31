@@ -1,7 +1,7 @@
 import { state, stateObserver } from 'store/store';
 import { getItemFromLocalStorage } from 'utils/getItemFromLocalStorage';
 
-export const loadGame = () => {
+const loadGame = () => {
   const savedGame = getItemFromLocalStorage('saved-game');
 
   if (savedGame) {
@@ -18,10 +18,7 @@ export const loadGame = () => {
   }
 };
 
-export const createLoadButtonController = (
-  loadButton: HTMLElement,
-  loadGame: () => void,
-) => {
+const createLoadButtonController = (loadButton: HTMLElement, loadGame: () => void) => {
   loadButton.addEventListener('click', () => {
     const savedGame = getItemFromLocalStorage('saved-game');
 
@@ -30,3 +27,5 @@ export const createLoadButtonController = (
     }
   });
 };
+
+export { loadGame, createLoadButtonController };
