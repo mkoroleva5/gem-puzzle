@@ -4,7 +4,7 @@ import darkBg from 'assets/bg-dark.png';
 import { ThemeType } from 'types/ThemeType';
 
 export const setBodyBackground = (body: HTMLElement, theme: ThemeType) => {
-  if (theme === 'dark') {
+  if (theme === 'light') {
     body.style.backgroundImage = `url(${lightBg})`;
   } else {
     body.style.backgroundImage = `url(${darkBg})`;

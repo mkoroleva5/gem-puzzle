@@ -15,9 +15,9 @@ export const createThemeButtonView = (parent: HTMLElement) => {
     const themeIcon = createElement<HTMLImageElement>('img', 'theme-icon');
 
     if (theme === 'light') {
-      themeIcon.src = lightIcon;
-    } else {
       themeIcon.src = darkIcon;
+    } else {
+      themeIcon.src = lightIcon;
     }
 
     themeButton.appendChild(themeIcon);
