@@ -12,8 +12,15 @@ const addResult = () => {
     speed: speed,
   });
 
+  state.results.sort((a, b) => b.fieldSize - a.fieldSize || b.speed - a.speed);
+
+  if (state.results.length > 10) {
+    state.results.pop();
+  }
+
   localStorage.setItem('results', JSON.stringify(state.results));
   stateObserver.broadcast('results', state.results);
+  console.log(state.results);
 };
 
 export const showResults = () => {

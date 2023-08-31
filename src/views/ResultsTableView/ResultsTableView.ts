@@ -11,22 +11,25 @@ export const createResultsTableView = (parent: HTMLElement) => {
   closeResultsButton.setAttribute('src', closeIcon);
 
   resultsWrapper.append(resultsTable);
-  resultsTable.append(closeResultsButton);
   parent.appendChild(resultsWrapper);
 
-  const sortedResults = state.results.sort(
-    (a, b) => b.fieldSize - a.fieldSize || a.speed - b.speed,
-  );
+  const addResult = () => {
+    resultsTable.innerHTML = '';
+    state.results.map((result, index) => {
+      const resultElement = createElement('div', 'results-item');
 
-  sortedResults.map((result, index) => {
-    const resultElement = createElement('div', 'results-item');
+      resultElement.textContent = `${index + 1}. 
+      ${result.fieldSize}x${result.fieldSize} - 
+          ${result.moves} moves - 
+          time: ${formatTime(result.time)}`;
 
-    resultElement.textContent = `${index + 1}. 
-        ${result.fieldSize}x${result.fieldSize} - 
-        ${result.moves} moves - 
-        time: ${formatTime(result.time)}`;
+      resultsTable.appendChild(resultElement);
+    });
+    resultsTable.append(closeResultsButton);
+  };
 
-    resultsTable.appendChild(resultElement);
+  stateObserver.subscribe(['isWin'], () => {
+    addResult();
   });
 
   stateObserver.subscribe(['areResultsOpen'], (newState) => {
