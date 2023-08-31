@@ -11,7 +11,7 @@ import { createFieldSizesView } from 'views/FieldSizesView/FieldSizesView';
 import { createFieldSizesController } from 'controllers/FieldSizesController/FieldSizesController';
 import { createSaveButtonController } from 'controllers/ButtonControllers/SaveButtonController';
 import { createLoadButtonController } from 'controllers/ButtonControllers/LoadButtonController';
-import { createResultButtonController } from 'controllers/ButtonControllers/ResultButtonController';
+import { createResultButtonController } from 'controllers/ButtonControllers/ResultsButtonController';
 import { createResultsTableController } from 'controllers/ResultsTableController/ResultsTableController';
 import { createMuteButtonController } from 'controllers/ButtonControllers/MuteButtonController';
 import {
@@ -45,7 +45,7 @@ createStopButtonController(
   gameModel.stopGame,
   gameModel.resumeGame,
 );
-createSaveButtonController(buttonsView.saveButton);
+createSaveButtonController(buttonsView.saveButton, gameModel.saveGame);
 createLoadButtonController(buttonsView.loadButton, gameModel.loadGame);
 createResultButtonController(buttonsView.resultsButton, gameModel.showResults);
 createMuteButtonController(buttonsView.muteButton, gameModel.toggleSound);
