@@ -1,3 +1,4 @@
+import { loadGame } from 'controllers/ButtonControllers/LoadButtonController';
 import { toggleSound } from 'controllers/ButtonControllers/MuteButtonController';
 import { toggleTheme } from 'controllers/ButtonControllers/ThemeButtonController';
 import { updateCellsArray } from 'controllers/GameFieldController/GameFieldController';
@@ -34,7 +35,7 @@ export const createGameModel = () => {
       startTimer();
     },
     loadGame() {
-      updateCellsArray();
+      loadGame();
       startTimer();
     },
     moveCell() {
