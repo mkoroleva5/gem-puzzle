@@ -14,17 +14,22 @@ export const createResultsTableView = (parent: HTMLElement) => {
   parent.appendChild(resultsWrapper);
 
   const addResult = () => {
-    resultsTable.innerHTML = '';
-    state.results.map((result, index) => {
-      const resultElement = createElement('div', 'results-item');
+    if (state.results.length === 0) {
+      resultsTable.textContent = 'No results yet :(\nKeep playing!';
+    } else {
+      resultsTable.innerHTML = '';
+      state.results.map((result, index) => {
+        const resultElement = createElement('div', 'results-item');
 
-      resultElement.textContent = `${index + 1}. 
-      ${result.fieldSize}x${result.fieldSize} - 
-          ${result.moves} moves - 
-          time: ${formatTime(result.time)}`;
+        resultElement.textContent = `${index + 1}. 
+        ${result.fieldSize}x${result.fieldSize} - 
+            ${result.moves} moves - 
+            time: ${formatTime(result.time)}`;
 
-      resultsTable.appendChild(resultElement);
-    });
+        resultsTable.appendChild(resultElement);
+      });
+    }
+
     resultsTable.append(closeResultsButton);
   };
 
