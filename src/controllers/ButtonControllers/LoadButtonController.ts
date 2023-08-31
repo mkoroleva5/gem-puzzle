@@ -16,10 +16,12 @@ export const loadGame = () => {
   const savedGame = getSavedGame();
 
   if (savedGame) {
+    state.isWin = false;
     state.gridSize = savedGame.gridSize;
     state.cellsArray = savedGame.cellsArray;
     state.timer = savedGame.timer;
     state.moves = savedGame.moves;
+    stateObserver.broadcast('isWin', state.isWin);
     stateObserver.broadcast('gridSize', state.gridSize);
     stateObserver.broadcast('cellsArray', state.cellsArray);
     stateObserver.broadcast('timer', state.timer);
