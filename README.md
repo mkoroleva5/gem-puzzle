@@ -1,6 +1,6 @@
 1. Task: https://github.com/rolling-scopes-school/tasks/blob/master/tasks/stage-1/dom-api/codejam-the-gem-puzzle.md
 2. Screenshot:
-![mkoroleva5-gem-puzzle netlify app_](https://user-images.githubusercontent.com/105849327/201539415-13c99a57-7401-46a4-9b3b-6540557ecec2.png)
+![gem-puzzle-mkoroleva5 netlify app_ (1)](https://github.com/mkoroleva5/gem-puzzle/assets/105849327/c589f357-867b-4f01-8457-c18a00c1d1c6)
 3. Deploy: [gem-puzzle-mkoroleva5.netlify.app](https://gem-puzzle-mkoroleva5.netlify.app/)
 4. Done 23.10.2022 / deadline 25.10.2022
 5. Score: 120/120  
