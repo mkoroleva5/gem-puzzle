@@ -20,7 +20,6 @@ const addResult = () => {
 
   localStorage.setItem('results', JSON.stringify(state.results));
   stateObserver.broadcast('results', state.results);
-  console.log(state.results);
 };
 
 const showResults = () => {

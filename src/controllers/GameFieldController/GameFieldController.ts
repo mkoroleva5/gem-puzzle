@@ -2,7 +2,7 @@ import { state, stateObserver } from 'store/store';
 import { createCellsValues } from './CellsArrayUtils';
 import { CellType } from 'types/CellType';
 import { canMoveCell, checkWin } from './GameFieldUtils';
-import { swapCells } from './CellSwapping';
+import { handleMouseMove, swapCells } from './CellSwapping';
 import { audioWin } from './GameSounds';
 
 const updateCellsArray = () => {
@@ -28,13 +28,13 @@ const updateCellsArray = () => {
   stateObserver.broadcast('cellsArray', state.cellsArray);
 };
 
-const addWinner = (isWin: boolean, callback: () => void) => {
+const addWinner = (isWin: boolean, addResult: () => void) => {
   if (isWin) {
     if (state.sound === 'on') {
       audioWin.play();
     }
 
-    callback();
+    addResult();
     state.gameStatus = 'none';
     state.isWin = true;
     stateObserver.broadcast('gameStatus', state.gameStatus);
@@ -47,29 +47,44 @@ const createGameFieldController = (
   moveCell: () => void,
   addResult: () => void,
 ) => {
-  gameField.addEventListener('click', (event) => {
-    const clickedCell = event.target as HTMLElement;
-    const cell = state.cellsArray.find((cell) => cell.element === clickedCell);
+  let dragging = false;
+  let initialX: number, initialY: number;
+  let draggedCell: CellType | null = null;
+
+  gameField.addEventListener('mousedown', (event) => {
+    event.preventDefault();
+
+    const clickedCellElement = event.target;
     const emptyCell = state.cellsArray.find((cell) => cell.value === 0);
 
-    const isMovable = canMoveCell(cell, emptyCell);
+    draggedCell = state.cellsArray.find((cell) => cell.element === clickedCellElement);
 
-    if (clickedCell.classList.contains('cell')) {
-      const clickedValue = parseInt(clickedCell.textContent || '0', 10);
+    if (draggedCell && canMoveCell(draggedCell, emptyCell)) {
+      dragging = true;
+      initialX = event.clientX;
+      initialY = event.clientY;
+    }
+  });
 
-      if (clickedValue !== 0 && isMovable) {
-        const clickedCellData = state.cellsArray.find(
-          (cell) => cell.value === clickedValue,
-        );
+  document.addEventListener('mousemove', (event) => {
+    const deltaX = event.clientX - initialX;
+    const deltaY = event.clientY - initialY;
 
-        if (clickedCellData) {
-          swapCells(clickedCellData);
-          moveCell();
-          const isWin = checkWin();
+    if (dragging) {
+      handleMouseMove(draggedCell, deltaX, deltaY);
+    }
+  });
 
-          addWinner(isWin, addResult);
-        }
-      }
+  document.addEventListener('mouseup', () => {
+    if (dragging && draggedCell) {
+      draggedCell.element.style.transform = 'none';
+      const isWin = checkWin();
+
+      swapCells(draggedCell);
+      moveCell();
+      addWinner(isWin, addResult);
+      dragging = false;
+      draggedCell = null;
     }
   });
 };

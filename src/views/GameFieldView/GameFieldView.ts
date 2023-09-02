@@ -58,6 +58,7 @@ const updateField = (
     const cell = createElement('div', 'cell');
 
     cell.id = `${cellItem.value}`;
+    cell.draggable = true;
     cell.textContent = `${cellItem.value}`;
 
     applyCellView(cell, cellItem, gridSize);
