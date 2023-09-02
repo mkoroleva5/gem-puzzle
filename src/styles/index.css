@@ -1,0 +1,258 @@
+@import 'normalize.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  height: calc(100vh - 50px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 50px;
+}
+
+.buttons-wrapper,
+.stats-wrapper,
+.field-size-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+
+.field-size-wrapper {
+  flex-wrap: wrap;
+  margin: 0 50px;
+}
+
+.results-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-100%);
+  z-index: 10;
+  transition: 0.5s;
+}
+
+.results-box {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin-top: 150px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 3px solid #829bd6;
+  border-radius: 10px;
+  color: #829bd6;
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+  white-space: pre-line;
+  z-index: 10;
+  transition: 0.5s;
+}
+
+.results-item {
+  width: 95%;
+  margin-left: 5px;
+  padding-top: 11px;
+  border-bottom: 2px solid rgb(239, 239, 239);
+  color: #829bd6;
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  line-height: initial;
+  white-space: normal;
+}
+
+.close-results-button {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.buttons-wrapper {
+  margin: 0 60px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5px;
+  height: 30px;
+  border: 3px solid #ace494;
+  border-radius: 10px;
+  background-color: white;
+  color: #9bdf7e;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}
+
+.button:active {
+  transform: scale(1);
+}
+
+.start-button:hover {
+  border: 3px solid #829bd6;
+  color: #829bd6;
+}
+
+.results-button:hover {
+  border: 3px solid #829bd6;
+  color: #829bd6;
+}
+
+.mute-button,
+.theme-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.theme-button {
+  top: 70px;
+}
+
+.mute-icon,
+.theme-icon {
+  width: 100%;
+  height: 100%;
+}
+
+.state-wrapper {
+  width: 320px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.moves,
+.timer {
+  margin-top: 30px;
+  color: white;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.field {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 20px 30px 30px 30px;
+  border: 10px solid #ace494;
+  border-radius: 10px;
+  background-color: rgb(223, 241, 206);
+  transition: 0.3s;
+}
+
+.victory {
+  color: #829bd6;
+  font-family: monospace;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  vertical-align: middle;
+  margin: 50px auto;
+  white-space: pre-line;
+}
+
+.cell {
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border: 5px solid #829bd6;
+  background-color: white;
+  border-radius: 10px;
+  font-family: monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: #829bd6;
+  cursor: pointer;
+  transition: 0.3s ease;
+  user-select: none;
+}
+
+.field-size-label {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 30px;
+  padding: 5px;
+  color: #829bd6;
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.1s ease;
+}
+
+.field-size-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 340px) {
+  .field {
+    border: 6px solid #ace494;
+  }
+
+  .results-box {
+    margin: 4px;
+    margin-top: 230px;
+  }
+}
