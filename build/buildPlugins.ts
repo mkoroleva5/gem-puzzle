@@ -11,6 +11,7 @@ export function buildPlugins({
   const plugins = [
     new HTMLWebpackPlugin({
       template: paths.html,
+      favicon: './public/gem-icon.png',
     }),
 
     new webpack.ProgressPlugin(),
