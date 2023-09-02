@@ -78,10 +78,12 @@ const createGameFieldController = (
   document.addEventListener('mouseup', () => {
     if (dragging && draggedCell) {
       draggedCell.element.style.transform = 'none';
-      const isWin = checkWin();
 
       swapCells(draggedCell);
       moveCell();
+
+      const isWin = checkWin();
+
       addWinner(isWin, addResult);
       dragging = false;
       draggedCell = null;
