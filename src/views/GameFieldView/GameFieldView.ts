@@ -33,14 +33,7 @@ export const applyCellView = (
   }
 };
 
-const updateField = (
-  gameField: HTMLElement,
-  cellsArray: CellType[],
-  gridSize: number,
-  isWin: boolean,
-) => {
-  gameField.innerHTML = '';
-
+const showWinMessage = (gameField: HTMLElement, isWin: boolean) => {
   if (isWin) {
     const victoryField = createElement('div', 'victory');
 
@@ -53,6 +46,14 @@ const updateField = (
       gameField.appendChild(victoryField);
     }, 500);
   }
+};
+
+const updateField = (
+  gameField: HTMLElement,
+  cellsArray: CellType[],
+  gridSize: number,
+) => {
+  gameField.innerHTML = '';
 
   cellsArray.map((cellItem: CellType) => {
     const cell = createElement('div', 'cell');
@@ -73,8 +74,12 @@ export const createGameFieldView = (parent: HTMLElement) => {
 
   parent.appendChild(gameField);
 
-  stateObserver.subscribe(['cellsArray', 'isWin'], (newState) => {
-    updateField(gameField, newState.cellsArray, state.gridSize, state.isWin);
+  stateObserver.subscribe(['cellsArray'], (newState) => {
+    updateField(gameField, newState.cellsArray, state.gridSize);
+  });
+
+  stateObserver.subscribe(['isWin'], (newState) => {
+    showWinMessage(gameField, newState.isWin);
   });
 
   return gameField;
